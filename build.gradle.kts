@@ -18,19 +18,17 @@ repositories {
 dependencies {
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
-
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     implementation("org.springframework:spring-web")
     implementation("org.springframework.boot:spring-boot-starter")
     //implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
-    implementation("org.jetbrains.kotlin:kotlin-reflect")
-
     runtimeOnly("org.springframework.boot:spring-boot-devtools")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-//    testImplementation(kotlin("test"))
+    testImplementation(kotlin("test"))
 }
 
 tasks.test {
