@@ -1,4 +1,4 @@
-package com.astrog.domain.model
+package com.astrog.domain.model.messaging
 
 data class User(
     val id: Long,

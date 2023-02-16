@@ -1,10 +1,10 @@
-package com.astrog.domain.model
+package com.astrog.domain.model.game
 
 data class Player(
     val id: Long,
-    val activeQuestion: Question?,
     val rightAnswered: Int,
     val wrongAnswered: Int,
+    val activeQuestion: QuestionWithShuffledAnswers?,
 ) {
 
     val questionCount: Int

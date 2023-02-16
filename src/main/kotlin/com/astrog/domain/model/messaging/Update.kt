@@ -1,4 +1,4 @@
-package com.astrog.domain.model
+package com.astrog.domain.model.messaging
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

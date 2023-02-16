@@ -1,7 +1,7 @@
-package com.astrog.domain
+package com.astrog.domain.api
 
-import com.astrog.domain.model.Message
-import com.astrog.domain.model.Update
+import com.astrog.domain.model.messaging.Message
+import com.astrog.domain.model.messaging.Update
 
 interface TelegramService {
 

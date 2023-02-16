@@ -1,4 +1,4 @@
-package com.astrog.domain.model
+package com.astrog.domain.model.game
 
 data class Question(
     val text: String,
