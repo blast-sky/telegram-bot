@@ -1,9 +1,9 @@
-package com.astrog.internal
+package com.astrog.internal.client
 
-import com.astrog.domain.TelegramService
-import com.astrog.domain.model.Message
-import com.astrog.domain.model.Update
-import com.astrog.internal.dto.*
+import com.astrog.domain.api.TelegramService
+import com.astrog.domain.model.messaging.Message
+import com.astrog.domain.model.messaging.Update
+import com.astrog.internal.client.dto.*
 import com.astrog.internal.property.TelegramBotProperty
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
@@ -15,10 +15,10 @@ private val logger = KotlinLogging.logger { }
 class TelegramClient(
     private val telegramRestTemplate: RestTemplate,
     private val telegramBotProperty: TelegramBotProperty,
-): TelegramService {
+) : TelegramService {
 
     override fun getUpdates(offset: Long): List<Update> = postMethod(
-        method ="getUpdates",
+        method = "getUpdates",
         requestDto = GetUpdatesRequestDto(
             offset = offset,
             timeout = telegramBotProperty.longPollingTimeout,

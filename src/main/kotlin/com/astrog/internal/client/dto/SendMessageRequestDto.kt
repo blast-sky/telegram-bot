@@ -1,4 +1,4 @@
-package com.astrog.internal.dto
+package com.astrog.internal.client.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

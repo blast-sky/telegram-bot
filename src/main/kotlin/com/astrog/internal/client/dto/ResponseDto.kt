@@ -1,4 +1,4 @@
-package com.astrog.internal.dto
+package com.astrog.internal.client.dto
 
 interface ResponseDto<T> {
     val ok: Boolean

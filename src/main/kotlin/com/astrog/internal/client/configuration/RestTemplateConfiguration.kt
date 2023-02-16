@@ -1,4 +1,4 @@
-package com.astrog.internal.configuration
+package com.astrog.internal.client.configuration
 
 import com.astrog.internal.property.TelegramBotProperty
 import org.springframework.context.annotation.Bean
@@ -15,7 +15,7 @@ class RestTemplateConfiguration {
     fun telegramRestTemplate(telegramBotProperty: TelegramBotProperty): RestTemplate {
         val interceptor = ClientHttpRequestInterceptor { request, body, execution ->
             val requestFactory = SimpleClientHttpRequestFactory()
-            val modifiedUrl =  URI(telegramBotProperty.baseUrlWithToken + request.uri)
+            val modifiedUrl = URI(telegramBotProperty.baseUrlWithToken + request.uri)
             val modifiedRequest = requestFactory.createRequest(modifiedUrl, request.method)
             request.headers.forEach { (name, values) -> modifiedRequest.headers[name] = values }
             execution.execute(modifiedRequest, body)
