@@ -10,3 +10,6 @@ telegram:
   bot-token: ${TG_TOKEN}
   base-url: https://api.telegram.org
   long-polling-timeout: 10
+
+game:
+  game-question-cont: 3
