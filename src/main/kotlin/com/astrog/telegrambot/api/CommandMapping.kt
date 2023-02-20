@@ -1,8 +1,8 @@
 package com.astrog.telegrambot.api
 
-import com.astrog.telegrambot.domain.service.AnswerService
-import com.astrog.telegrambot.domain.service.NoCommandService
-import com.astrog.telegrambot.domain.service.StartService
+import com.astrog.telegrambot.domain.questions.service.AnswerService
+import com.astrog.telegrambot.domain.questions.service.NoCommandService
+import com.astrog.telegrambot.domain.questions.service.StartService
 import com.astrog.telegramcommon.api.TelegramCommandMapping
 import com.astrog.telegramcommon.domain.model.Message
 import org.springframework.stereotype.Component

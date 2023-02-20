@@ -1,4 +1,4 @@
-package com.astrog.telegrambot.domain.model
+package com.astrog.telegrambot.domain.questions.model
 
 data class Question(
     val text: String,

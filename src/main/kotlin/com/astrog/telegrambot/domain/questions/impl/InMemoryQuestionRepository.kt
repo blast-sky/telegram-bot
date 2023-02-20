@@ -1,7 +1,7 @@
-package com.astrog.telegrambot.domain.impl
+package com.astrog.telegrambot.domain.questions.impl
 
-import com.astrog.telegrambot.domain.api.QuestionRepository
-import com.astrog.telegrambot.domain.model.Question
+import com.astrog.telegrambot.domain.questions.api.QuestionRepository
+import com.astrog.telegrambot.domain.questions.model.Question
 import org.springframework.stereotype.Service
 
 @Service

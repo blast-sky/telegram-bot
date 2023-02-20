@@ -1,6 +1,6 @@
-package com.astrog.telegrambot.domain.api
+package com.astrog.telegrambot.domain.questions.api
 
-import com.astrog.telegrambot.domain.model.Player
+import com.astrog.telegrambot.domain.questions.model.Player
 
 interface PlayerRepository {
 

@@ -1,7 +1,7 @@
 package com.astrog.telegrambot.internal
 
-import com.astrog.telegrambot.domain.model.Player
-import com.astrog.telegrambot.domain.model.QuestionWithShuffledAnswers
+import com.astrog.telegrambot.domain.questions.model.Player
+import com.astrog.telegrambot.domain.questions.model.QuestionWithShuffledAnswers
 import com.astrog.telegramcommon.api.TelegramService
 import org.springframework.stereotype.Service
 
