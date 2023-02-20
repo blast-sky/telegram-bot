@@ -1,7 +1,7 @@
 package com.astrog.telegrambot.domain.impl
 
 import com.astrog.telegrambot.domain.api.PlayerRepository
-import com.astrog.telegrambot.domain.model.game.Player
+import com.astrog.telegrambot.domain.model.Player
 import org.springframework.stereotype.Component
 
 @Component

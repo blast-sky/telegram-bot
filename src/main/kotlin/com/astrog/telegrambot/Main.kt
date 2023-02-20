@@ -1,10 +1,12 @@
 package com.astrog.telegrambot
 
-import com.astrog.telegrambot.domain.GameProperty
-import com.astrog.telegrambot.internal.property.TelegramBotProperty
+import com.astrog.telegrambot.internal.GameProperty
+import com.astrog.telegramcommon.internal.property.TelegramBotProperty
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ComponentScan
 
 @EnableConfigurationProperties(
     TelegramBotProperty::class,

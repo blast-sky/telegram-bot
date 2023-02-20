@@ -1,7 +1,7 @@
 package com.astrog.telegrambot.domain.service
 
-import com.astrog.telegrambot.domain.model.game.Question
-import com.astrog.telegrambot.domain.model.game.QuestionWithShuffledAnswers
+import com.astrog.telegrambot.domain.model.Question
+import com.astrog.telegrambot.domain.model.QuestionWithShuffledAnswers
 import org.springframework.stereotype.Service
 
 @Service

@@ -1,5 +1,6 @@
 package com.astrog.telegrambot.domain.service
 
+import com.astrog.telegrambot.internal.TelegramAnnouncer
 import org.springframework.stereotype.Service
 
 @Service
