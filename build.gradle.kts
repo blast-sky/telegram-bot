@@ -17,8 +17,8 @@ repositories {
 
 dependencies {
 
-    api(project(":telegram-common"))
-    api(project(":openai-api"))
+    api(project(":lib:telegram-common"))
+    api(project(":lib:openai-api"))
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

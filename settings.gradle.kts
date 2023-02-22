@@ -2,7 +2,7 @@ rootProject.name = "telegram-bot"
 
 include(
     listOf(
-        "telegram-common",
-        "openai-api",
+        ":lib:telegram-common",
+        ":lib:openai-api",
     )
 )

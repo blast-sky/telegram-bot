@@ -5,13 +5,14 @@ import com.astrog.telegramcommon.api.TelegramService
 import org.springframework.stereotype.Service
 
 @Service
-class CompletingService(
+class ImageGenerationService(
     private val openAiClient: OpenAiClient,
     private val telegramService: TelegramService,
 ) {
 
-    fun process(chatId: Long, args: String) {
-        val completing = openAiClient.getCompletion(args)
-        telegramService.sendMessage(chatId, completing)
+    fun process(chatId: Long, text: String) {
+        openAiClient.getImageCreation(text).forEach { imageUrl ->
+            telegramService.sendImage(chatId, imageUrl)
+        }
     }
 }

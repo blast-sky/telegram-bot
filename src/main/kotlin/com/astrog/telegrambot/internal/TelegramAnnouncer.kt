@@ -43,7 +43,7 @@ class TelegramAnnouncer(
         telegramService.sendMessage(chatId, "Game already started.")
     }
 
-    fun printIDoNotUnderstand(chatId: Long) {
+    fun printToUseHelp(chatId: Long) {
         telegramService.sendMessage(chatId, "Use /help to get supported commands.")
     }
 }

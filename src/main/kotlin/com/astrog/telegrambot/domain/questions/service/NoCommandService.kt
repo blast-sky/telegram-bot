@@ -9,6 +9,6 @@ class NoCommandService(
 ) {
 
     fun process(chatId: Long) {
-        telegramAnnouncer.printIDoNotUnderstand(chatId)
+        telegramAnnouncer.printToUseHelp(chatId)
     }
 }
