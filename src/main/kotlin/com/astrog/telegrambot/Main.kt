@@ -1,15 +1,15 @@
 package com.astrog.telegrambot
 
+import com.astrog.openaiapi.internal.OpenAiProperty
 import com.astrog.telegrambot.internal.GameProperty
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
-import org.springframework.context.annotation.ComponentScan
 
 @EnableConfigurationProperties(
     TelegramBotProperty::class,
+    OpenAiProperty::class,
     GameProperty::class
 )
 @SpringBootApplication

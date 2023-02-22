@@ -6,6 +6,7 @@ import com.astrog.telegramcommon.domain.model.Update
 import com.astrog.telegramcommon.internal.client.dto.*
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
 import mu.KotlinLogging
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 

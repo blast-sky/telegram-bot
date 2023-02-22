@@ -1,3 +1,8 @@
-
 rootProject.name = "telegram-bot"
-include("telegram-common")
+
+include(
+    listOf(
+        "telegram-common",
+        "openai-api",
+    )
+)

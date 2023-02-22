@@ -1,5 +1,6 @@
 package com.astrog.telegrambot.api
 
+import com.astrog.telegrambot.domain.CompletingService
 import com.astrog.telegrambot.domain.questions.service.AnswerService
 import com.astrog.telegrambot.domain.questions.service.NoCommandService
 import com.astrog.telegrambot.domain.questions.service.StartService
@@ -12,6 +13,7 @@ class CommandMapping(
     private val startService: StartService,
     private val answerService: AnswerService,
     private val noCommandService: NoCommandService,
+    private val completingService: CompletingService,
 ) {
 
     @TelegramCommandMapping("start")
@@ -26,7 +28,7 @@ class CommandMapping(
 
     @TelegramCommandMapping("completion")
     fun onCompletion(message: Message, args: String) {
-
+        completingService.process(chatId = message.chat.id, args)
     }
 
     @TelegramCommandMapping

@@ -44,6 +44,6 @@ class TelegramAnnouncer(
     }
 
     fun printIDoNotUnderstand(chatId: Long) {
-        telegramService.sendMessage(chatId, "I do not understand.")
+        telegramService.sendMessage(chatId, "Use /help to get supported commands.")
     }
 }
