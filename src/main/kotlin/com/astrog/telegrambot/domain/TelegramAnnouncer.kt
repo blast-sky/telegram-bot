@@ -1,13 +1,15 @@
-package com.astrog.telegrambot.internal
+package com.astrog.telegrambot.domain
 
 import com.astrog.telegrambot.domain.questions.model.Player
 import com.astrog.telegrambot.domain.questions.model.QuestionWithShuffledAnswers
 import com.astrog.telegramcommon.api.TelegramService
+import com.astrog.telegramcommon.internal.mapping.TelegramCommandMappingCollector
 import org.springframework.stereotype.Service
 
 @Service
 class TelegramAnnouncer(
     private val telegramService: TelegramService,
+    private val commandMappingCollector: TelegramCommandMappingCollector,
 ) {
 
     fun printMustStart(chatId: Long) {
@@ -45,5 +47,19 @@ class TelegramAnnouncer(
 
     fun printToUseHelp(chatId: Long) {
         telegramService.sendMessage(chatId, "Use /help to get supported commands.")
+    }
+
+    fun printHelp(chatId: Long) {
+        val commandsToShow = listOf("help", "comp", "ig")
+        telegramService.sendMessage(
+            chatId,
+            commandMappingCollector
+                .commands
+                .toList()
+                .filter { it.first in commandsToShow }
+                .joinToString("\n") { command ->
+                    "/${command.first} - ${command.second.first().description}"
+                }
+        )
     }
 }

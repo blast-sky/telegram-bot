@@ -3,7 +3,7 @@ package com.astrog.telegrambot.domain.questions.service
 import com.astrog.telegrambot.domain.questions.api.PlayerRepository
 import com.astrog.telegrambot.domain.questions.model.Player
 import com.astrog.telegrambot.domain.questions.model.QuestionWithShuffledAnswers
-import com.astrog.telegrambot.internal.TelegramAnnouncer
+import com.astrog.telegrambot.domain.TelegramAnnouncer
 import org.springframework.stereotype.Service
 
 @Service

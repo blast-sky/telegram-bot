@@ -8,10 +8,15 @@ import org.springframework.stereotype.Service
 class CompletingService(
     private val openAiClient: OpenAiClient,
     private val telegramService: TelegramService,
-) {
+) : BaseCatchingService() {
 
-    fun process(chatId: Long, args: String) {
-        val completing = openAiClient.getCompletion(args)
-        telegramService.sendMessage(chatId, completing)
-    }
+    fun process(chatId: Long, args: String) = catching(
+        onException = {
+            telegramService.sendMessage(chatId, "Try later...")
+        },
+        block = {
+            val completing = openAiClient.getCompletion(args)
+            telegramService.sendMessage(chatId, completing)
+        },
+    )
 }
