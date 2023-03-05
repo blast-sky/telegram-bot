@@ -1,22 +1,23 @@
 package com.astrog.telegramcommon.internal
 
 import com.astrog.telegramcommon.api.TelegramService
-import org.springframework.boot.CommandLineRunner
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
-import java.util.PriorityQueue
 
 @Component
+@EnableScheduling
 class BotRunner(
     private val telegramService: TelegramService,
     private val processUpdateService: ProcessUpdateService,
-) : CommandLineRunner {
+) {
 
-    override fun run(args: Array<String>) {
-        var lastUpdateId = Long.MAX_VALUE
-        while (true) {
-            val updates = telegramService.getUpdates(lastUpdateId)
-            updates.lastOrNull()?.let { lastUpdate -> lastUpdateId = lastUpdate.updateId + 1 }
-            updates.forEach { update -> processUpdateService.processUpdate(update) }
-        }
+    private var lastUpdateId = Long.MAX_VALUE
+
+    @Scheduled(fixedRateString = "\${telegram.long-polling-timeout}", initialDelay = 1000)
+    fun execute() {
+        val updates = telegramService.getUpdates(lastUpdateId)
+        updates.lastOrNull()?.let { lastUpdate -> lastUpdateId = lastUpdate.updateId + 1 }
+        updates.forEach { update -> processUpdateService.processUpdate(update) }
     }
 }
