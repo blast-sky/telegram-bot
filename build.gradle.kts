@@ -44,7 +44,3 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "17"
     }
 }
-
-tasks.bootJar {
-    archiveFileName.set("app.jar")
-}
