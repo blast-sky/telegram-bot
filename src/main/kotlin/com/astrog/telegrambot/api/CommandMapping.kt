@@ -6,12 +6,12 @@ import com.astrog.telegrambot.domain.TelegramAnnouncer
 import com.astrog.telegrambot.domain.questions.service.AnswerService
 import com.astrog.telegrambot.domain.questions.service.NoCommandService
 import com.astrog.telegrambot.domain.questions.service.StartService
-import com.astrog.telegramcommon.api.TelegramCommandMapping
-import com.astrog.telegramcommon.api.TelegramUnsupportedCommandMapping
+import com.astrog.telegramcommon.api.annotation.TelegramCommand
+import com.astrog.telegramcommon.api.annotation.TelegramController
+import com.astrog.telegramcommon.api.annotation.TelegramUnsupportedCommandMapping
 import com.astrog.telegramcommon.domain.model.Message
-import org.springframework.stereotype.Component
 
-@Component
+@TelegramController
 class CommandMapping(
     private val startService: StartService,
     private val answerService: AnswerService,
@@ -21,7 +21,7 @@ class CommandMapping(
     private val announcer: TelegramAnnouncer,
 ) {
 
-    @TelegramCommandMapping(
+    @TelegramCommand(
         command = "help",
         description = "Prints all command."
     )
@@ -29,7 +29,7 @@ class CommandMapping(
         announcer.printHelp(message.chat.id)
     }
 
-    @TelegramCommandMapping(
+    @TelegramCommand(
         command = "start",
         description = "Starts new game.",
     )
@@ -37,7 +37,7 @@ class CommandMapping(
         startService.process(chatId = message.chat.id)
     }
 
-    @TelegramCommandMapping(
+    @TelegramCommand(
         command = "answer",
         description = "",
     )
@@ -45,7 +45,7 @@ class CommandMapping(
         answerService.process(chatId = message.chat.id, args = args)
     }
 
-    @TelegramCommandMapping(
+    @TelegramCommand(
         command = "comp",
         description = "[text for completion] - Completion of phrase"
     )
@@ -53,7 +53,7 @@ class CommandMapping(
         completingService.process(chatId = message.chat.id, args = args)
     }
 
-    @TelegramCommandMapping(
+    @TelegramCommand(
         command = "ig",
         description = "[text for image] - Image generator."
     )
@@ -61,7 +61,7 @@ class CommandMapping(
         imageGenerationService.process(chatId = message.chat.id, text = args)
     }
 
-    @TelegramCommandMapping
+    @TelegramCommand
     @TelegramUnsupportedCommandMapping
     fun onNoCommand(message: Message, args: String) {
         noCommandService.process(chatId = message.chat.id)

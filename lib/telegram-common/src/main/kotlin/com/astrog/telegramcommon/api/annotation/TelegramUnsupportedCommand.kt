@@ -1,4 +1,4 @@
-package com.astrog.telegramcommon.api
+package com.astrog.telegramcommon.api.annotation
 
 
 @Retention(AnnotationRetention.RUNTIME)
