@@ -6,10 +6,10 @@ import com.astrog.telegramcommon.api.annotation.TelegramUnsupportedCommandMappin
 import com.astrog.telegramcommon.domain.model.Message
 import com.fasterxml.jackson.module.kotlin.isKotlinClass
 import org.springframework.beans.factory.config.BeanPostProcessor
+import org.springframework.beans.factory.support.BeanDefinitionBuilder
 import org.springframework.context.support.GenericApplicationContext
 import org.springframework.stereotype.Component
 import java.util.UUID
-import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KFunction
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotations
@@ -22,16 +22,25 @@ class TelegramCommandBeanPostProcessor(
     private val context: GenericApplicationContext,
 ) : BeanPostProcessor {
 
+    // TODO use list injection instead
+    private val _commands = mutableListOf<Command>()
+    val commands: List<Command> get() = _commands
+
     override fun postProcessBeforeInitialization(bean: Any, beanName: String): Any? {
         val beanClass = bean::class
         if (!beanClass.java.isKotlinClass() || !beanClass.hasAnnotation<TelegramController>())
             return bean
 
         beanClass.memberFunctions.forEach { method ->
-            val commandsAndDescriptions = method.findAnnotations<TelegramCommand>().map { it.command to it.description } +
-                method.findAnnotations<TelegramUnsupportedCommandMapping>().map { it.command to "" }
+            // Change on @AliasFor
+            val commandsAndDescriptions = method.findAnnotations<TelegramCommand>()
+                .map { it.command to it.description } +
+                method.findAnnotations<TelegramUnsupportedCommandMapping>()
+                    .map { it.command to "" }
             commandsAndDescriptions.forEach { (command, description) ->
                 registerBean(context, command, description, bean, method)
+                // TODO use list injection instead
+                _commands += Command(command, description, createMethodInvocation(bean, method))
             }
         }
 
@@ -39,18 +48,14 @@ class TelegramCommandBeanPostProcessor(
     }
 
     private fun registerBean(
-        context: GenericApplicationContext,
-        command: String,
-        description: String,
-        bean: Any,
-        method: KFunction<*>
+        context: GenericApplicationContext, command: String, description: String, bean: Any, method: KFunction<*>
     ) {
-        context.registerBean(
-            UUID.randomUUID().toString(),
+        val def = BeanDefinitionBuilder.genericBeanDefinition(
             Command::class.java,
-            command,
-            description,
-            createMethodInvocation(bean, method)
+        ) { Command(command, description, createMethodInvocation(bean, method)) }.beanDefinition
+        context.registerBeanDefinition(
+            UUID.randomUUID().toString(),
+            def,
         )
     }
 
@@ -68,14 +73,4 @@ class TelegramCommandBeanPostProcessor(
             method.callBy(neededArguments)
         }
     }
-
-    private val KAnnotatedElement.inheritedAnnotation: List<TelegramCommand>
-        get() {
-            val notCommandAnnotations =
-                annotations.filter { it !is TelegramCommand && it !is Target && it !is Retention && it !is MustBeDocumented }
-            return findAnnotations<TelegramCommand>() +
-                notCommandAnnotations.flatMap {
-                    it.annotationClass.annotations.flatMap { it.annotationClass.inheritedAnnotation }
-                }
-        }
 }
