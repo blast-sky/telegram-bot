@@ -1,4 +1,4 @@
-package com.astrog.telegramcommon.internal.client.dto
+package com.astrog.telegramcommon.internal.client.dto.sendmessage
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

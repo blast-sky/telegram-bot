@@ -10,4 +10,6 @@ interface TelegramService {
     fun sendMessage(chatId: Long, text: String): UpdateContent.Message
 
     fun sendImage(chatId: Long, url: String): UpdateContent.Message
+
+    fun downloadFile(fileId: String): String
 }

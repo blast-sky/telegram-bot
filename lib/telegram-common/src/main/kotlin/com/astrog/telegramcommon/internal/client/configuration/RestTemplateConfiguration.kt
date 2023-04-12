@@ -12,10 +12,17 @@ import java.net.URI
 class RestTemplateConfiguration {
 
     @Bean("telegramRestTemplate")
-    fun telegramRestTemplate(telegramBotProperty: TelegramBotProperty): RestTemplate {
+    fun telegramRestTemplate(telegramBotProperty: TelegramBotProperty): RestTemplate =
+        templateWithBaseUrl(telegramBotProperty.baseUrlWithToken)
+
+    @Bean("telegramFileDownloaderRestTemplate")
+    fun telegramFileDownloaderRestTemplate(telegramBotProperty: TelegramBotProperty): RestTemplate =
+        templateWithBaseUrl(telegramBotProperty.fileBaseUrlWithToken)
+
+    private fun templateWithBaseUrl(baseUrl: String): RestTemplate {
         val interceptor = ClientHttpRequestInterceptor { request, body, execution ->
             val requestFactory = SimpleClientHttpRequestFactory()
-            val modifiedUrl = URI(telegramBotProperty.baseUrlWithToken + request.uri)
+            val modifiedUrl = URI(baseUrl + request.uri)
             val modifiedRequest = requestFactory.createRequest(modifiedUrl, request.method)
             request.headers.forEach { (name, values) -> modifiedRequest.headers[name] = values }
             execution.execute(modifiedRequest, body)

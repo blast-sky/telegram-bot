@@ -1,11 +1,11 @@
-package com.astrog.openaiapi.internal.dto
+package com.astrog.openaiapi.internal.dto.completion
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class CompletingRequest(
-    val model: String = "text-davinci-003",
+    val model: String,
     val prompt: String,
     @JsonProperty("max_tokens")
-    val maxTokens: Long = 2048,
+    val maxTokens: Long? = 2000,
     val temperature: Long = 0,
 )

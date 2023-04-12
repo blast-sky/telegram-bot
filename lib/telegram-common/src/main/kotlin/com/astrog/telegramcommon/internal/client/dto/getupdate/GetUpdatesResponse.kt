@@ -1,6 +1,7 @@
-package com.astrog.telegramcommon.internal.client.dto
+package com.astrog.telegramcommon.internal.client.dto.getupdate
 
 import com.astrog.telegramcommon.domain.model.Update
+import com.astrog.telegramcommon.internal.client.dto.ResponseDto
 
 data class GetUpdatesResponse(
     override val ok: Boolean,

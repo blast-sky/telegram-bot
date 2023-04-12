@@ -1,6 +1,14 @@
 package com.astrog.openaiapi.api
 
-import com.astrog.openaiapi.internal.dto.*
+import com.astrog.openaiapi.internal.OpenAiProperty
+import com.astrog.openaiapi.internal.dto.completion.CompletingRequest
+import com.astrog.openaiapi.internal.dto.completion.CompletingResponse
+import com.astrog.openaiapi.internal.dto.Data
+import com.astrog.openaiapi.internal.dto.ImageGenerationRequest
+import com.astrog.openaiapi.internal.dto.ImageGenerationResponse
+import com.astrog.openaiapi.internal.dto.chatcompletion.ChatCompletionRequest
+import com.astrog.openaiapi.internal.dto.chatcompletion.ChatCompletionResponse
+import com.astrog.openaiapi.internal.dto.chatcompletion.Message
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
@@ -8,16 +16,34 @@ import org.springframework.web.client.postForObject
 @Service
 class OpenAiClient(
     private val openAiRestTemplate: RestTemplate,
+    private val openAiProperty: OpenAiProperty,
 ) {
 
     fun getCompletion(text: String): String {
         return openAiRestTemplate
             .postForObject<CompletingResponse>(
                 "v1/completions",
-                CompletingRequest(prompt = text),
+                CompletingRequest(
+                    model = openAiProperty.completionModel,
+                    prompt = text,
+                ),
             )
             .choices
             .joinToString("\n") { it.text }
+    }
+
+    fun getChatCompletion(messages: List<Message> = emptyList()): Message {
+        return openAiRestTemplate
+            .postForObject<ChatCompletionResponse>(
+                "v1/chat/completions",
+                ChatCompletionRequest(
+                    model = openAiProperty.chatCompletionModel,
+                    messages = messages,
+                ),
+            )
+            .choices
+            .first()
+            .message
     }
 
     fun getImageCreation(text: String): List<String> {

@@ -5,19 +5,23 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class Update(
     @JsonProperty("update_id")
     val updateId: Long,
-    val message: UpdateContent.Message?,
+    private val message: UpdateContent.Message?,
     @JsonProperty("edited_message")
-    val editedMessage: UpdateContent.EditedMessage?,
+    private val editedMessage: UpdateContent.Message?,
     @JsonProperty("channel_post")
-    val channelPost: UpdateContent.ChannelPost?,
+    private val channelPost: UpdateContent.Message?,
     @JsonProperty("edited_channel_post")
-    val editedChannelPost: UpdateContent.EditedChannelPost?,
+    private val editedChannelPost: UpdateContent.Message?,
 ) {
 
-    val firstNotNullUpdateContent = listOfNotNull(
-        message,
-        editedMessage,
-        channelPost,
-        editedChannelPost,
-    ).first()
+    // Take first not null message from update and set message type
+    val messageWithType = mapOf(
+        MessageType.MESSAGE to message,
+        MessageType.EDITED_MESSAGE to editedMessage,
+        MessageType.CHANNEL_POST to channelPost,
+        MessageType.EDITED_CHANNEL_POST to editedChannelPost,
+    )
+        .entries
+        .first { (_, value) -> value != null }
+        .run { value!!.apply { type = key } }
 }

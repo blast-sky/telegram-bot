@@ -10,6 +10,10 @@ class TelegramAnnouncer(
     private val telegramService: TelegramService,
 ) {
 
+    fun printMessageAreCleared(chatId: Long) {
+        telegramService.sendMessage(chatId, "Messages are cleared.")
+    }
+
     fun printMustStart(chatId: Long) {
         telegramService.sendMessage(chatId, "You are must /start to start game.")
     }
@@ -48,6 +52,13 @@ class TelegramAnnouncer(
     }
 
     fun printHelp(chatId: Long) {
-        telegramService.sendMessage(chatId, "TODO")
+        telegramService.sendMessage(
+            chatId,
+            """
+            /comp [query]
+            /clear
+            /ig [query]
+            """.trimIndent(),
+        )
     }
 }

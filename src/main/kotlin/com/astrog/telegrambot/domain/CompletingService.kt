@@ -1,6 +1,7 @@
 package com.astrog.telegrambot.domain
 
 import com.astrog.openaiapi.api.OpenAiClient
+import com.astrog.openaiapi.internal.dto.chatcompletion.Message
 import com.astrog.telegramcommon.api.TelegramService
 import org.springframework.stereotype.Service
 
@@ -8,15 +9,20 @@ import org.springframework.stereotype.Service
 class CompletingService(
     private val openAiClient: OpenAiClient,
     private val telegramService: TelegramService,
+    private val openAiMessageStore: OpenAiMessageStore,
 ) : BaseCatchingService() {
 
     fun process(chatId: Long, args: String) = catching(
-        onException = {
-            telegramService.sendMessage(chatId, "Try later...")
+        onException = { ex ->
+            telegramService.sendMessage(chatId, "Try later... (${ex.message})")
         },
         block = {
-            val completing = openAiClient.getCompletion(args)
-            telegramService.sendMessage(chatId, completing)
+            val id = chatId.toString()
+            openAiMessageStore.addMessage(id, Message("user", args))
+            val cashedMessages = openAiMessageStore.getMessages(id)
+            val message = openAiClient.getChatCompletion(cashedMessages)
+            openAiMessageStore.addMessage(id, message)
+            telegramService.sendMessage(chatId, message.content)
         },
     )
 }

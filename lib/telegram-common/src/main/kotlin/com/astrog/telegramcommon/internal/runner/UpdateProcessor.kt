@@ -20,10 +20,8 @@ class UpdateProcessor(
 
     fun process(update: Update) {
         logger.info { "Process update: $update." }
-        when (val baseMessage = update.firstNotNullUpdateContent) {
-            is UpdateContent.Message -> processMessage(baseMessage) // TODO add other UpdateContent types
-            else -> processBaseMessage(baseMessage)
-        }
+        val message = update.messageWithType
+        processMessage(message)
     }
 
     private fun processMessage(message: UpdateContent.Message) {
@@ -33,19 +31,15 @@ class UpdateProcessor(
             }
         }
 
-        processBaseMessage(message)
-    }
-
-    private fun processBaseMessage(message: UpdateContent.BaseMessage) {
         messageHandlers.forEach { handler ->
-            handler.dispatcher.invoke(message)
+            if (handler.isHandle(message)) {
+                handler.dispatcher.invoke(message)
+            }
         }
     }
 
     private fun processCommand(message: UpdateContent.Message, command: String, args: String) {
-        val acceptedCommands = commands[command]
-            ?: commands[unsupportedCommandMapping]
-            ?: emptyList()
+        val acceptedCommands = commands[command] ?: commands[unsupportedCommandMapping] ?: emptyList()
 
         if (acceptedCommands.isEmpty()) {
             return logger.info { "No one command supported for message: $message" }
