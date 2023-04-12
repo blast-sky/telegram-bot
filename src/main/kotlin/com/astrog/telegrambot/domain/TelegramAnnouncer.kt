@@ -3,13 +3,11 @@ package com.astrog.telegrambot.domain
 import com.astrog.telegrambot.domain.questions.model.Player
 import com.astrog.telegrambot.domain.questions.model.QuestionWithShuffledAnswers
 import com.astrog.telegramcommon.api.TelegramService
-import com.astrog.telegramcommon.internal.mapping.TelegramCommandBeanPostProcessor
 import org.springframework.stereotype.Service
 
 @Service
 class TelegramAnnouncer(
     private val telegramService: TelegramService,
-    private val tcbpp: TelegramCommandBeanPostProcessor,
 ) {
 
     fun printMustStart(chatId: Long) {
@@ -50,15 +48,6 @@ class TelegramAnnouncer(
     }
 
     fun printHelp(chatId: Long) {
-        val commandsToShow = listOf("help", "comp", "ig")
-        telegramService.sendMessage(
-            chatId,
-            tcbpp
-                .commands
-                .filter { it.command in commandsToShow }
-                .joinToString("\n") { command ->
-                    "/${command.command} - ${command.description}"
-                }
-        )
+        telegramService.sendMessage(chatId, "TODO")
     }
 }

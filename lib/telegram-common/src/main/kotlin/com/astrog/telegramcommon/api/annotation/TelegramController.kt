@@ -1,8 +1,8 @@
 package com.astrog.telegramcommon.api.annotation
 
-import org.springframework.stereotype.Component
+import org.springframework.context.annotation.Configuration
 
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
-@Component
+@Configuration
 annotation class TelegramController
