@@ -1,15 +1,18 @@
 package com.astrog.telegramcommon.internal.client
 
 import com.astrog.telegramcommon.api.TelegramService
-import com.astrog.telegramcommon.domain.model.Message
 import com.astrog.telegramcommon.domain.model.Update
-import com.astrog.telegramcommon.internal.client.dto.*
+import com.astrog.telegramcommon.domain.model.UpdateContent.Message
+import com.astrog.telegramcommon.internal.client.dto.GetUpdatesRequest
+import com.astrog.telegramcommon.internal.client.dto.GetUpdatesResponse
+import com.astrog.telegramcommon.internal.client.dto.ResponseDto
+import com.astrog.telegramcommon.internal.client.dto.SendMessageRequest
+import com.astrog.telegramcommon.internal.client.dto.SendMessageResponse
+import com.astrog.telegramcommon.internal.client.dto.SendPhotoRequest
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
-import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 
-private val logger = KotlinLogging.logger { }
 
 @Service
 class TelegramClient(
@@ -49,14 +52,12 @@ class TelegramClient(
         requestDto: Any,
         responseDtoClass: Class<D>,
     ): O {
-        logger.info { "Request for <$method> method." }
         val response = telegramRestTemplate.postForObject(
             method,
             requestDto,
             responseDtoClass,
         )
-        return response?.result
-            ?: throw RuntimeException("Unavailable results for <$method>.")
+        return response?.result ?: throw RuntimeException("Unavailable results for <$method>.")
     }
 
 }

@@ -1,9 +1,8 @@
 package com.astrog.telegramcommon.api.annotation
 
-@Repeatable
+import org.springframework.context.annotation.Bean
+
 @Retention(AnnotationRetention.RUNTIME)
 @Target(AnnotationTarget.FUNCTION)
-annotation class TelegramCommand(
-    val command: String = "",
-    val description: String = "",
-)
+@Bean
+annotation class TelegramMapping
