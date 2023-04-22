@@ -2,4 +2,4 @@ package com.astrog.telegramcommon.internal.handler
 
 import com.astrog.telegramcommon.domain.model.UpdateContent
 
-typealias MessageHandlerDispatcher = (message: UpdateContent.Message) -> Unit
+typealias MessageHandlerDispatcher = suspend (message: UpdateContent.Message) -> Unit

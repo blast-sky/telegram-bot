@@ -13,7 +13,7 @@ class StartService(
     private val questionGenerator: QuestionGenerator,
 ) {
 
-    fun process(chatId: Long) {
+    suspend fun process(chatId: Long) {
         if (playerRepository.isPlayerInGame(chatId)) {
             telegramAnnouncer.printGameAlreadyStarted(chatId)
             return

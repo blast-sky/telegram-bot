@@ -11,7 +11,6 @@ fun telegramMessageHandlerOf(
     return MessageHandler(block, handledMessageTypes)
 }
 
-
 fun telegramMessageHandlerOf(
     handledMessageType: MessageType,
     block: MessageHandlerDispatcher,

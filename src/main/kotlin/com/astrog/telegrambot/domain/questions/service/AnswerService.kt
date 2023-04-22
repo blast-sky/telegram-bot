@@ -14,7 +14,7 @@ class AnswerService(
     private val gameProperty: GameProperty,
 ) {
 
-    fun process(chatId: Long, args: String) {
+    suspend fun process(chatId: Long, args: String) {
         if (!playerRepository.isPlayerInGame(chatId)) {
             telegramAnnouncer.printMustStart(chatId)
             return

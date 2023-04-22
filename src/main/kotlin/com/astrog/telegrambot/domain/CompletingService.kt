@@ -12,7 +12,7 @@ class CompletingService(
     private val openAiMessageStore: OpenAiMessageStore,
 ) : BaseCatchingService() {
 
-    fun process(chatId: Long, args: String) = catching(
+    suspend fun process(chatId: Long, args: String) = catching(
         onException = { ex ->
             telegramService.sendMessage(chatId, "Try later... (${ex.message})")
         },

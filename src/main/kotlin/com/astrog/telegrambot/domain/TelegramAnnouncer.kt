@@ -10,27 +10,27 @@ class TelegramAnnouncer(
     private val telegramService: TelegramService,
 ) {
 
-    fun printMessageAreCleared(chatId: Long) {
+    suspend fun printMessageAreCleared(chatId: Long) {
         telegramService.sendMessage(chatId, "Messages are cleared.")
     }
 
-    fun printMustStart(chatId: Long) {
+    suspend fun printMustStart(chatId: Long) {
         telegramService.sendMessage(chatId, "You are must /start to start game.")
     }
 
-    fun printWrongAnswerFormat(chatId: Long) {
+    suspend fun printWrongAnswerFormat(chatId: Long) {
         telegramService.sendMessage(chatId, "Answer must look like this: /answer <answer number>.")
     }
 
-    fun printWrongAnswer(chatId: Long, question: QuestionWithShuffledAnswers) {
+    suspend fun printWrongAnswer(chatId: Long, question: QuestionWithShuffledAnswers) {
         telegramService.sendMessage(chatId, "You are wrong. The right answer: ${question.rightAnswerIndexes}")
     }
 
-    fun printRightAnswer(chatId: Long) {
+    suspend fun printRightAnswer(chatId: Long) {
         telegramService.sendMessage(chatId, "Good, your answer is right.")
     }
 
-    fun printResults(chatId: Long, player: Player) {
+    suspend fun printResults(chatId: Long, player: Player) {
         val percentage = player.rightAnswered.toDouble() / player.questionCount
         telegramService.sendMessage(
             chatId,
@@ -39,19 +39,19 @@ class TelegramAnnouncer(
         )
     }
 
-    fun askQuestion(chatId: Long, question: QuestionWithShuffledAnswers) {
+    suspend fun askQuestion(chatId: Long, question: QuestionWithShuffledAnswers) {
         telegramService.sendMessage(chatId, question.text)
     }
 
-    fun printGameAlreadyStarted(chatId: Long) {
+    suspend fun printGameAlreadyStarted(chatId: Long) {
         telegramService.sendMessage(chatId, "Game already started.")
     }
 
-    fun printToUseHelp(chatId: Long) {
+    suspend fun printToUseHelp(chatId: Long) {
         telegramService.sendMessage(chatId, "Use /help to get supported commands.")
     }
 
-    fun printHelp(chatId: Long) {
+    suspend fun printHelp(chatId: Long) {
         telegramService.sendMessage(
             chatId,
             """
