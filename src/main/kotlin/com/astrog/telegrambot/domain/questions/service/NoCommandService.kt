@@ -8,7 +8,7 @@ class NoCommandService(
     private val telegramAnnouncer: TelegramAnnouncer,
 ) {
 
-    fun process(chatId: Long) {
+    suspend fun process(chatId: Long) {
         telegramAnnouncer.printToUseHelp(chatId)
     }
 }

@@ -10,7 +10,7 @@ class ImageGenerationService(
     private val telegramService: TelegramService,
 ) : BaseCatchingService() {
 
-    fun process(chatId: Long, text: String) = catching(
+    suspend fun process(chatId: Long, text: String) = catching(
         onException = {
             telegramService.sendMessage(chatId, "Try later...")
         },

@@ -1,10 +1,13 @@
 package com.astrog.telegramcommon.domain.model
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class Update(
     @JsonProperty("update_id")
     val updateId: Long,
+    @JsonProperty("message")
     private val message: UpdateContent.Message?,
     @JsonProperty("edited_message")
     private val editedMessage: UpdateContent.Message?,
@@ -22,6 +25,6 @@ data class Update(
         MessageType.EDITED_CHANNEL_POST to editedChannelPost,
     )
         .entries
-        .first { (_, value) -> value != null }
-        .run { value!!.apply { type = key } }
+        .firstOrNull { (_, value) -> value != null }
+        ?.run { value!!.apply { type = key } }
 }

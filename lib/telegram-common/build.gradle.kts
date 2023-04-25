@@ -19,12 +19,21 @@ dependencyManagement {
 
 dependencies {
 
-    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    val retrofitVersion = "2.9.0"
+    implementation("com.squareup.retrofit2:retrofit:$retrofitVersion")
+    implementation("com.squareup.retrofit2:converter-jackson:$retrofitVersion")
+
+    implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    implementation("org.springframework:spring-web")
     implementation("org.springframework.boot:spring-boot-starter")
+
+    val coroutinesVersion = "1.6.0"
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${coroutinesVersion}")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(kotlin("test"))
