@@ -38,12 +38,12 @@ class OpenAiClient(
                 "v1/chat/completions",
                 ChatCompletionRequest(
                     model = openAiProperty.chatCompletionModel,
-                    chatMessages = chatMessages,
+                    messages = chatMessages,
                 ),
             )
             .choices
             .first()
-            .chatMessage
+            .message
     }
 
     fun getImageCreation(text: String): List<String> {

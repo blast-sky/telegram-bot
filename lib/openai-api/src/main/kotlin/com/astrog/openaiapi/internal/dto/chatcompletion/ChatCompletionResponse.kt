@@ -7,7 +7,8 @@ data class ChatCompletionResponse(
 )
 
 data class Choice(
-    val chatMessage: ChatMessage,
+    @JsonProperty("message")
+    val message: ChatMessage,
     @JsonProperty("finish_reason")
     val finishReason: String,
 )
