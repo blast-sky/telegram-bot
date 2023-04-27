@@ -2,7 +2,7 @@ package com.astrog.telegrambot.api
 
 import com.astrog.telegrambot.domain.CompletingService
 import com.astrog.telegrambot.domain.ImageGenerationService
-import com.astrog.telegrambot.domain.OpenAiMessageStore
+import com.astrog.telegrambot.domain.openai.OpenAiMessageStore
 import com.astrog.telegrambot.domain.TelegramAnnouncer
 import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.api.annotation.TelegramController
@@ -38,7 +38,7 @@ class OpenAiController(
         if (args.isNotBlank()) {
             return@telegramCommandOf announcer.printHelp(message.chat.id)
         }
-        messageStore.clearMessages(message.chat.id.toString())
+        messageStore.clearMessages(message.chat.id)
         announcer.printMessageAreCleared(message.chat.id)
     }
 

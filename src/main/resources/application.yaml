@@ -1,6 +1,13 @@
 spring:
   profiles:
-    active: default
+    active: Default,InMemoryStore  # PersistStore
+  datasource:
+    url: jdbc:postgresql://${BD_URL}
+    username: ${BD_USERNAME}
+    password: ${BD_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 logging:
   level:
