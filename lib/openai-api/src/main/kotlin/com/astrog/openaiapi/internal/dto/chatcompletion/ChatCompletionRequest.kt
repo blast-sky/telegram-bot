@@ -2,10 +2,10 @@ package com.astrog.openaiapi.internal.dto.chatcompletion
 
 data class ChatCompletionRequest(
     val model: String,
-    val messages: List<Message>,
+    val chatMessages: List<ChatMessage>,
 )
 
-data class Message(
-    val role: String,
+data class ChatMessage(
+    val role: ChatRole,
     val content: String,
 )

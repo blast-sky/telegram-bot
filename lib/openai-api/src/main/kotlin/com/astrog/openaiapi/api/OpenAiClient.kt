@@ -8,7 +8,7 @@ import com.astrog.openaiapi.internal.dto.ImageGenerationRequest
 import com.astrog.openaiapi.internal.dto.ImageGenerationResponse
 import com.astrog.openaiapi.internal.dto.chatcompletion.ChatCompletionRequest
 import com.astrog.openaiapi.internal.dto.chatcompletion.ChatCompletionResponse
-import com.astrog.openaiapi.internal.dto.chatcompletion.Message
+import com.astrog.openaiapi.internal.dto.chatcompletion.ChatMessage
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
@@ -32,18 +32,18 @@ class OpenAiClient(
             .joinToString("\n") { it.text }
     }
 
-    fun getChatCompletion(messages: List<Message> = emptyList()): Message {
+    fun getChatCompletion(chatMessages: List<ChatMessage> = emptyList()): ChatMessage {
         return openAiRestTemplate
             .postForObject<ChatCompletionResponse>(
                 "v1/chat/completions",
                 ChatCompletionRequest(
                     model = openAiProperty.chatCompletionModel,
-                    messages = messages,
+                    chatMessages = chatMessages,
                 ),
             )
             .choices
             .first()
-            .message
+            .chatMessage
     }
 
     fun getImageCreation(text: String): List<String> {

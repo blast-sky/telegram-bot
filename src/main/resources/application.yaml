@@ -1,6 +1,10 @@
 spring:
   profiles:
     active: default
+  datasource:
+    url: jdbc:postgresql://${BD_URL}
+    username: ${BD_USERNAME}
+    password: ${BD_PASSWORD}
 
 logging:
   level:
