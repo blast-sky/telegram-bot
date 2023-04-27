@@ -14,7 +14,7 @@ class CompletingService(
 
     suspend fun process(chatId: Long, args: String) = catching(
         onException = { ex ->
-            telegramService.sendMessage(chatId, "Try later... (${ex.message})")
+            telegramService.sendMessage(chatId, "Try later...")
         },
         block = {
             val id = chatId.toString()
