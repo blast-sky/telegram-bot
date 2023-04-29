@@ -4,6 +4,7 @@ import com.astrog.telegramcommon.domain.model.File
 import com.astrog.telegramcommon.domain.model.Update
 import com.astrog.telegramcommon.domain.model.UpdateContent
 import com.astrog.telegramcommon.internal.client.ResponseDto
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -16,7 +17,7 @@ interface TelegramApiService {
     suspend fun getUpdates(
         @Query("offset") offset: Long,
         @Query("timeout") timeout: Int,
-    ): ResponseDto<List<Update>>
+    ): Response<ResponseDto<List<Update>>>
 
     @POST("getFile")
     @FormUrlEncoded
