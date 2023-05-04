@@ -1,17 +1,24 @@
 package com.astrog.openaiapi.api
 
 import com.astrog.openaiapi.internal.OpenAiProperty
-import com.astrog.openaiapi.internal.dto.completion.CompletingRequest
-import com.astrog.openaiapi.internal.dto.completion.CompletingResponse
 import com.astrog.openaiapi.internal.dto.Data
 import com.astrog.openaiapi.internal.dto.ImageGenerationRequest
 import com.astrog.openaiapi.internal.dto.ImageGenerationResponse
 import com.astrog.openaiapi.internal.dto.chatcompletion.ChatCompletionRequest
 import com.astrog.openaiapi.internal.dto.chatcompletion.ChatCompletionResponse
 import com.astrog.openaiapi.internal.dto.chatcompletion.ChatMessage
+import com.astrog.openaiapi.internal.dto.completion.CompletingRequest
+import com.astrog.openaiapi.internal.dto.completion.CompletingResponse
+import com.astrog.openaiapi.internal.dto.transcription.TranscriptionResponse
+import org.springframework.core.io.FileSystemResource
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
+import org.springframework.util.LinkedMultiValueMap
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.postForObject
+import java.io.File
 
 @Service
 class OpenAiClient(
@@ -54,5 +61,22 @@ class OpenAiClient(
             )
             .data
             .map(Data::url)
+    }
+
+    fun getTranslation(file: File): String {
+        val headers = HttpHeaders().apply { contentType = MediaType.MULTIPART_FORM_DATA }
+        val body = LinkedMultiValueMap<String, Any>().apply {
+            add("file", FileSystemResource(file))
+            add("model", "whisper-1")
+        }
+
+        val requestEntity = HttpEntity(body, headers)
+
+        return openAiRestTemplate
+            .postForObject<TranscriptionResponse>(
+                "v1/audio/transcriptions",
+                requestEntity,
+            )
+            .text ?: ""
     }
 }
