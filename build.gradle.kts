@@ -19,6 +19,7 @@ dependencies {
 
     implementation(project(":lib:telegram-common"))
     implementation(project(":lib:openai-api"))
+    implementation(project(":lib:audioconverter"))
 
     implementation("io.github.microutils:kotlin-logging-jvm:3.0.5")
 
@@ -45,7 +46,7 @@ tasks.withType<KotlinCompile> {
 }
 
 tasks.bootJar {
-    archiveFileName.set("app-${version}.jar")
+    archiveFileName.set("app.jar")
     launchScript()
 }
 
