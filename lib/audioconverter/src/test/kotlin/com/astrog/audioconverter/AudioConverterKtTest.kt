@@ -1,8 +1,10 @@
 package com.astrog.audioconverter
 
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import java.io.File
+import kotlin.test.Ignore
 
 internal class AudioConverterKtTest {
 
@@ -13,6 +15,7 @@ internal class AudioConverterKtTest {
             ?: error("Have not resource test.opus")
     )
 
+    @Disabled("Uses ffmpeg")
     @Test
     fun `convertOggToWav() Must not throw When bytes from ogg`() = runTest {
         convertOggToWav(bytes)
