@@ -20,11 +20,7 @@ class TelegramClient(
     private val telegramBotProperty: TelegramBotProperty,
 ) : TelegramService {
 
-    override suspend fun getUpdates(offset: Long): List<Update> = telegramApiService
-        .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
-        .checkOnError()
-
-    private inline fun <reified T> Response<ResponseDto<T>>.checkOnError(): T {
+    private inline fun <reified T> Response<ResponseDto<T>>.getResultOrThrow(): T {
         if (isSuccessful) {
             val responseDto = body() ?: throw IllegalStateException()
             return responseDto.result
@@ -38,25 +34,31 @@ class TelegramClient(
         }
     }
 
+    override suspend fun getUpdates(offset: Long): List<Update> = telegramApiService
+        .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
+        .getResultOrThrow()
+
     override suspend fun sendMessage(chatId: Long, text: String, replyToMessageId: Long?): Message =
         telegramApiService
             .sendMessage(chatId = chatId, text = text, replyToMessageId = replyToMessageId)
-            .result
+            .getResultOrThrow()
 
     override suspend fun sendImage(chatId: Long, url: String): Message = telegramApiService
         .sendPhoto(chatId = chatId, url = url)
-        .result
+        .getResultOrThrow()
 
     private suspend fun getFile(fileId: String): File = telegramApiService
         .getFile(fileId = fileId)
-        .result
+        .getResultOrThrow()
 
     override suspend fun downloadFile(fileId: String): ByteArray {
         val file = getFile(fileId)
 
         val responseBody = telegramFileApiService.downloadFile(
             filePath = file.filePath ?: error("filepath is null: $file")
-        )
+        ).let { response ->
+            response.body ?: throw TelegramHttpException(response.code, "Can`t read bytes from response: <$response>")
+        }
 
         return responseBody.bytes()
     }

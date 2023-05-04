@@ -23,7 +23,7 @@ interface TelegramApiService {
     @FormUrlEncoded
     suspend fun getFile(
         @Field("file_id") fileId: String,
-    ): ResponseDto<File>
+    ): Response<ResponseDto<File>>
 
     @POST("sendMessage")
     @FormUrlEncoded
@@ -31,12 +31,12 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("text") text: String,
         @Field("reply_to_message_id") replyToMessageId: Long?,
-    ): ResponseDto<UpdateContent.Message>
+    ): Response<ResponseDto<UpdateContent.Message>>
 
     @POST("sendPhoto")
     @FormUrlEncoded
     suspend fun sendPhoto(
         @Field("chat_id") chatId: Long,
         @Field("photo") url: String,
-    ): ResponseDto<UpdateContent.Message>
+    ): Response<ResponseDto<UpdateContent.Message>>
 }
