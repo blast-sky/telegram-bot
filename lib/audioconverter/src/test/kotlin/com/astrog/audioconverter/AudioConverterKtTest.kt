@@ -8,9 +8,9 @@ internal class AudioConverterKtTest {
 
     private val bytes = File(
         AudioConverterKtTest::class.java
-            .getResource("test.ogg")
+            .getResource("test.opus")
             ?.file
-            ?: error("Have not resource test.ogg")
+            ?: error("Have not resource test.opus")
     )
 
     @Test
