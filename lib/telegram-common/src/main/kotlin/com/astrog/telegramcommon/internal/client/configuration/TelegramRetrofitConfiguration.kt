@@ -36,7 +36,7 @@ class TelegramRetrofitConfiguration(
     @Bean
     fun telegramFileApiService(): TelegramFileApiService {
         return retrofitBuilder
-            .baseUrl("${telegramBotProperty.baseUrlWithToken}/")
+            .baseUrl("${telegramBotProperty.fileBaseUrlWithToken}/")
             .build()
             .create(TelegramFileApiService::class.java)
     }

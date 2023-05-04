@@ -18,9 +18,10 @@ interface TelegramApiService {
         @Query("timeout") timeout: Int,
     ): ResponseDto<List<Update>>
 
-    @GET("getFile")
-    fun getFile(
-        @Field("file_id") fileId: String
+    @POST("getFile")
+    @FormUrlEncoded
+    suspend fun getFile(
+        @Field("file_id") fileId: String,
     ): ResponseDto<File>
 
     @POST("sendMessage")
@@ -28,12 +29,13 @@ interface TelegramApiService {
     suspend fun sendMessage(
         @Field("chat_id") chatId: Long,
         @Field("text") text: String,
+        @Field("reply_to_message_id") replyToMessageId: Long?,
     ): ResponseDto<UpdateContent.Message>
 
-    @POST("sendImage")
+    @POST("sendPhoto")
     @FormUrlEncoded
-    suspend fun sendImage(
+    suspend fun sendPhoto(
         @Field("chat_id") chatId: Long,
-        @Field("url") url: String,
+        @Field("photo") url: String,
     ): ResponseDto<UpdateContent.Message>
 }
