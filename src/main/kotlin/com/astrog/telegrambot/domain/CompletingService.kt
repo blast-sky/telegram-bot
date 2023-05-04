@@ -18,16 +18,20 @@ class CompletingService(
 ) : BaseCatchingService() {
 
     suspend fun process(chatId: Long, args: String) = catching(
-        onException = { ex ->
-            logger.error(ex.stackTraceToString())
+        onException = {
             telegramService.sendMessage(chatId, "Try later...")
         },
         block = {
-            openAiMessageStore.addMessage(chatId, ChatMessage(ChatRole.User, args))
-            val cashedMessages = openAiMessageStore.getMessages(chatId)
-            val message = openAiClient.getChatCompletion(cashedMessages)
-            openAiMessageStore.addMessage(chatId, message)
-            telegramService.sendMessage(chatId, message.content)
+            val completion = getChatCompletionAndStoreMessages(chatId, args)
+            telegramService.sendMessage(chatId, completion)
         },
     )
+
+    suspend fun getChatCompletionAndStoreMessages(chatId: Long, request: String): String {
+        openAiMessageStore.addMessage(chatId, ChatMessage(ChatRole.User, request))
+        val cashedMessages = openAiMessageStore.getMessages(chatId)
+        val message = openAiClient.getChatCompletion(cashedMessages)
+        openAiMessageStore.addMessage(chatId, message)
+        return message.content
+    }
 }

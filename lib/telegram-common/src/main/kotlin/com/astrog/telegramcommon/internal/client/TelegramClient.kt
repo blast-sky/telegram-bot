@@ -7,10 +7,7 @@ import com.astrog.telegramcommon.domain.model.UpdateContent.Message
 import com.astrog.telegramcommon.internal.client.configuration.TelegramApiService
 import com.astrog.telegramcommon.internal.client.configuration.TelegramFileApiService
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
-import java.io.FileOutputStream
 
 
 @Service
@@ -24,32 +21,26 @@ class TelegramClient(
         .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
         .result
 
-    override suspend fun sendMessage(chatId: Long, text: String): Message = telegramApiService
-        .sendMessage(chatId = chatId, text = text)
-        .result
+    override suspend fun sendMessage(chatId: Long, text: String, replyToMessageId: Long?): Message =
+        telegramApiService
+            .sendMessage(chatId = chatId, text = text, replyToMessageId = replyToMessageId)
+            .result
 
     override suspend fun sendImage(chatId: Long, url: String): Message = telegramApiService
-        .sendImage(chatId = chatId, url = url)
+        .sendPhoto(chatId = chatId, url = url)
         .result
 
-    private fun getFile(fileId: String): File = telegramApiService
+    private suspend fun getFile(fileId: String): File = telegramApiService
         .getFile(fileId = fileId)
         .result
 
-    override suspend fun downloadFile(fileId: String): String {
+    override suspend fun downloadFile(fileId: String): ByteArray {
         val file = getFile(fileId)
 
-        val bytes = telegramFileApiService.downloadFile(
-            filePath = file.filePath
-                ?: error("filepath is null: $file")
-        ) ?: error("null bytes")
+        val responseBody = telegramFileApiService.downloadFile(
+            filePath = file.filePath ?: error("filepath is null: $file")
+        )
 
-        val fileName = "voice-${file.fileUniqueId}.ogg"
-
-        withContext(Dispatchers.IO) {
-            FileOutputStream(fileName).use { out -> out.write(bytes) }
-        }
-
-        return fileName
+        return responseBody.bytes()
     }
 }

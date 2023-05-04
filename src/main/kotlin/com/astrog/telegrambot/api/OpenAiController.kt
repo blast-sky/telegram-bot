@@ -2,8 +2,9 @@ package com.astrog.telegrambot.api
 
 import com.astrog.telegrambot.domain.CompletingService
 import com.astrog.telegrambot.domain.ImageGenerationService
-import com.astrog.telegrambot.domain.openai.OpenAiMessageStore
 import com.astrog.telegrambot.domain.TelegramAnnouncer
+import com.astrog.telegrambot.domain.TranscriptionService
+import com.astrog.telegrambot.domain.openai.OpenAiMessageStore
 import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.api.annotation.TelegramController
 import com.astrog.telegramcommon.api.annotation.TelegramMapping
@@ -21,6 +22,7 @@ class OpenAiController(
     private val imageGenerationService: ImageGenerationService,
     private val telegramService: TelegramService,
     private val announcer: TelegramAnnouncer,
+    private val transcriptionService: TranscriptionService,
 ) {
 
     @TelegramMapping
@@ -43,10 +45,23 @@ class OpenAiController(
     }
 
     @TelegramMapping
-    fun downloadVoice() = telegramMessageHandlerOf(MessageType.MESSAGE) { message ->
+    fun chatMessage() = telegramMessageHandlerOf(MessageType.MESSAGE) { message ->
+        message.text?.let { text ->
+            completingService.process(message.chat.id, text)
+        }
+    }
+
+    @TelegramMapping
+    fun transcription() = telegramMessageHandlerOf(MessageType.MESSAGE) { message ->
         message.voice?.let { voice ->
-            val fileName = telegramService.downloadFile(voice.fileId)
-            logger.info { "File downloaded: $fileName" }
+            transcriptionService.process(message.chat.id, voice.fileId)
+        }
+    }
+
+    @TelegramMapping
+    fun transcriptionCommand() = telegramCommandOf("tran") { message, _ ->
+        message.replyToMessage?.voice?.let { voice ->
+            transcriptionService.processOnlyTranscription(message.messageId, message.chat.id, voice.fileId)
         }
     }
 }

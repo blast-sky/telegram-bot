@@ -25,6 +25,7 @@ abstract class BaseCatchingService {
             try {
                 mainJob.await()
             } catch (ex: RuntimeException) {
+                logger.error(ex.stackTraceToString())
                 onException.invoke(ex)
             }
         }
