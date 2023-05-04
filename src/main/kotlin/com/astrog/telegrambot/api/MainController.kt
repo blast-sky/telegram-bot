@@ -20,6 +20,7 @@ class MainController(
     @TelegramMapping
     fun startCommandMapping() = telegramCommandOf(
         command = "start",
+        description = "Show all available commands",
     ) { message, _ -> announcer.printHelp(message.chat.id) }
 
     @TelegramMapping
