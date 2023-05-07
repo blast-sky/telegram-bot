@@ -13,13 +13,12 @@ class MainController(
 
     @TelegramMapping
     fun helpCommandMapping() = telegramCommandOf(
-        command = "help",
-        description = "Show all available commands",
+        handledCommand = "help",
     ) { message, _ -> announcer.printHelp(message.chat.id) }
 
     @TelegramMapping
     fun startCommandMapping() = telegramCommandOf(
-        command = "start",
+        handledCommand = "start",
     ) { message, _ -> announcer.printHelp(message.chat.id) }
 
     @TelegramMapping

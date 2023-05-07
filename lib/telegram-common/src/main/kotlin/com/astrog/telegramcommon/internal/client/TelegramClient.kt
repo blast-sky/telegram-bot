@@ -2,8 +2,8 @@ package com.astrog.telegramcommon.internal.client
 
 import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.domain.model.File
-import com.astrog.telegramcommon.domain.model.Update
-import com.astrog.telegramcommon.domain.model.UpdateContent.Message
+import com.astrog.telegramcommon.domain.model.update.Message
+import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.configuration.TelegramApiService
 import com.astrog.telegramcommon.internal.client.configuration.TelegramFileApiService
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
@@ -17,7 +17,7 @@ class TelegramClient(
     private val telegramBotProperty: TelegramBotProperty,
 ) : TelegramService {
 
-    override suspend fun getUpdates(offset: Long): List<Update> = telegramApiService
+    override suspend fun getUpdates(offset: Long): List<RawUpdate> = telegramApiService
         .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
         .result
 

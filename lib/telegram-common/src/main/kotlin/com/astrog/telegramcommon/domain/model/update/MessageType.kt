@@ -1,4 +1,4 @@
-package com.astrog.telegramcommon.domain.model
+package com.astrog.telegramcommon.domain.model.update
 
 enum class MessageType {
     MESSAGE,
