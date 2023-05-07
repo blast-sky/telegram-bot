@@ -1,10 +1,9 @@
 package com.astrog.telegramcommon.internal.client.configuration
 
 import com.astrog.telegramcommon.domain.model.File
-import com.astrog.telegramcommon.domain.model.Update
-import com.astrog.telegramcommon.domain.model.UpdateContent
-import com.astrog.telegramcommon.internal.client.ResponseDto
-import retrofit2.Response
+import com.astrog.telegramcommon.domain.model.update.Message
+import com.astrog.telegramcommon.domain.model.update.RawUpdate
+import com.astrog.telegramcommon.internal.client.TelegramResponse
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -17,13 +16,13 @@ interface TelegramApiService {
     suspend fun getUpdates(
         @Query("offset") offset: Long,
         @Query("timeout") timeout: Int,
-    ): Response<ResponseDto<List<Update>>>
+    ): TelegramResponse<List<RawUpdate>>
 
     @POST("getFile")
     @FormUrlEncoded
     suspend fun getFile(
         @Field("file_id") fileId: String,
-    ): Response<ResponseDto<File>>
+    ): TelegramResponse<File>
 
     @POST("sendMessage")
     @FormUrlEncoded
@@ -31,12 +30,12 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("text") text: String,
         @Field("reply_to_message_id") replyToMessageId: Long?,
-    ): Response<ResponseDto<UpdateContent.Message>>
+    ): TelegramResponse<Message>
 
     @POST("sendPhoto")
     @FormUrlEncoded
     suspend fun sendPhoto(
         @Field("chat_id") chatId: Long,
         @Field("photo") url: String,
-    ): Response<ResponseDto<UpdateContent.Message>>
+    ): TelegramResponse<Message>
 }

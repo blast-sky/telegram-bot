@@ -7,6 +7,9 @@ plugins {
     id("io.spring.dependency-management") version "1.1.0"
 }
 
+group = "com.astrog.telegramcommon"
+version = "0.1"
+
 repositories {
     mavenCentral()
 }
@@ -34,6 +37,7 @@ dependencies {
     val coroutinesVersion = "1.6.0"
     api("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}")
 //    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${coroutinesVersion}")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:${coroutinesVersion}")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation(kotlin("test"))

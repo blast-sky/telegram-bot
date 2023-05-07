@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class ResponseDto<T>(
+data class TelegramResponse<T>(
     @JsonProperty("result")
     val result: T,
     @JsonProperty("ok")
