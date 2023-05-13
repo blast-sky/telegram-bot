@@ -19,7 +19,7 @@ jobs:
           java-version: 17
 
       - name: Set up ffmpeg
-        run: run: sudo apt update && sudo apt upgrade && sudo apt install ffmpeg
+        run: sudo apt update && sudo apt upgrade && sudo apt install ffmpeg
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
