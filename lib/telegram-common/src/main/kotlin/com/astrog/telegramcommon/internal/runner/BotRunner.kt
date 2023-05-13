@@ -1,12 +1,10 @@
 package com.astrog.telegramcommon.internal.runner
 
 import com.astrog.telegramcommon.api.TelegramService
-import com.astrog.telegramcommon.domain.model.Update
+import com.astrog.telegramcommon.domain.model.update.RawUpdate
+import com.astrog.telegramcommon.internal.client.UpdateMapper
 import com.astrog.telegramcommon.internal.runner.idholder.IdHolder
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.runBlocking
 import mu.KotlinLogging
 import org.springframework.scheduling.annotation.EnableScheduling
@@ -21,6 +19,7 @@ private val logger = KotlinLogging.logger { }
 class BotRunner(
     private val telegramService: TelegramService,
     private val updateDispatcher: UpdateDispatcher,
+    private val updateMapper: UpdateMapper,
     private val idHolder: IdHolder,
 ) {
 
@@ -33,10 +32,11 @@ class BotRunner(
         val lastProcessedId = idHolder.id
         val updates = telegramService.getUpdates(lastProcessedId + 1)
         updateIdIfUpdatesNotEmpty(updates)
-        updateDispatcher.dispatch(updates)
+        val mappedUpdates = updateMapper.mapRawUpdates(updates)
+        updateDispatcher.dispatch(mappedUpdates)
     }
 
-    private fun updateIdIfUpdatesNotEmpty(updates: List<Update>) {
-        updates.lastOrNull()?.let { updateDto -> idHolder.update(updateDto.updateId) }
+    private fun updateIdIfUpdatesNotEmpty(rawUpdates: List<RawUpdate>) {
+        rawUpdates.lastOrNull()?.let { updateDto -> idHolder.update(updateDto.updateId) }
     }
 }

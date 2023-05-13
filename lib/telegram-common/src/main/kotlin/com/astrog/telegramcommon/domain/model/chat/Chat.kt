@@ -1,4 +1,4 @@
-package com.astrog.telegramcommon.domain.model
+package com.astrog.telegramcommon.domain.model.chat
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -7,4 +7,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
 data class Chat(
     @JsonProperty("id")
     val id: Long,
+    @JsonProperty("type")
+    val type: ChatType
 )

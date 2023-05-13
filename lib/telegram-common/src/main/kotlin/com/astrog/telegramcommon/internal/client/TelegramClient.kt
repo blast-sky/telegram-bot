@@ -3,8 +3,9 @@ package com.astrog.telegramcommon.internal.client
 import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.api.exception.TelegramHttpException
 import com.astrog.telegramcommon.domain.model.File
-import com.astrog.telegramcommon.domain.model.Update
-import com.astrog.telegramcommon.domain.model.UpdateContent.Message
+import com.astrog.telegramcommon.domain.model.MessageParseMode
+import com.astrog.telegramcommon.domain.model.update.Message
+import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.configuration.TelegramApiService
 import com.astrog.telegramcommon.internal.client.configuration.TelegramFileApiService
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
@@ -20,7 +21,7 @@ class TelegramClient(
     private val telegramBotProperty: TelegramBotProperty,
 ) : TelegramService {
 
-    private inline fun <reified T> Response<ResponseDto<T>>.getResultOrThrow(): T {
+    private inline fun <reified T> Response<TelegramResponse<T>>.getResultOrThrow(): T {
         if (isSuccessful) {
             val responseDto = body() ?: throw IllegalStateException()
             return responseDto.result
@@ -34,13 +35,27 @@ class TelegramClient(
         }
     }
 
-    override suspend fun getUpdates(offset: Long): List<Update> = telegramApiService
+    override suspend fun getUpdates(offset: Long): List<RawUpdate> = telegramApiService
         .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
         .getResultOrThrow()
 
-    override suspend fun sendMessage(chatId: Long, text: String, replyToMessageId: Long?): Message =
+    override suspend fun sendMessage(
+        chatId: Long,
+        text: String,
+        replyToMessageId: Long?,
+        parseMode: MessageParseMode?,
+        disableNotification: Boolean?,
+        allowSendingWithoutReply: Boolean?
+    ): Message =
         telegramApiService
-            .sendMessage(chatId = chatId, text = text, replyToMessageId = replyToMessageId)
+            .sendMessage(
+                chatId = chatId,
+                text = text,
+                replyToMessageId = replyToMessageId,
+                parseMode = parseMode,
+                disableNotification = disableNotification,
+                allowSendingWithoutReply = allowSendingWithoutReply,
+            )
             .getResultOrThrow()
 
     override suspend fun sendImage(chatId: Long, url: String): Message = telegramApiService
@@ -54,12 +69,12 @@ class TelegramClient(
     override suspend fun downloadFile(fileId: String): ByteArray {
         val file = getFile(fileId)
 
-        val responseBody = telegramFileApiService.downloadFile(
+        val response = telegramFileApiService.downloadFile(
             filePath = file.filePath ?: error("filepath is null: $file")
         ).let { response ->
             response.body ?: throw TelegramHttpException(response.code, "Can`t read bytes from response: <$response>")
         }
 
-        return responseBody.bytes()
+        return response.bytes()
     }
 }
