@@ -5,6 +5,7 @@ import com.astrog.telegramcommon.domain.model.MessageParseMode
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.TelegramResponse
+import retrofit2.Response
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
@@ -17,13 +18,13 @@ interface TelegramApiService {
     suspend fun getUpdates(
         @Query("offset") offset: Long,
         @Query("timeout") timeout: Int,
-    ): TelegramResponse<List<RawUpdate>>
+    ): Response<TelegramResponse<List<RawUpdate>>>
 
     @POST("getFile")
     @FormUrlEncoded
     suspend fun getFile(
         @Field("file_id") fileId: String,
-    ): TelegramResponse<File>
+    ): Response<TelegramResponse<File>>
 
     @POST("sendMessage")
     @FormUrlEncoded
@@ -34,12 +35,12 @@ interface TelegramApiService {
         @Field("parse_mode") parseMode: MessageParseMode?,
         @Field("disable_notification") disableNotification: Boolean?,
         @Field("allow_sending_without_reply") allowSendingWithoutReply: Boolean?
-    ): TelegramResponse<Message>
+    ): Response<TelegramResponse<Message>>
 
     @POST("sendPhoto")
     @FormUrlEncoded
     suspend fun sendPhoto(
         @Field("chat_id") chatId: Long,
         @Field("photo") url: String,
-    ): TelegramResponse<Message>
+    ): Response<TelegramResponse<Message>>
 }

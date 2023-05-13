@@ -12,7 +12,7 @@ interface TelegramService {
         chatId: Long,
         text: String,
         replyToMessageId: Long? = null,
-        parseMode: MessageParseMode? = MessageParseMode.MarkdownV2,
+        parseMode: MessageParseMode? = null,
         disableNotification: Boolean? = null,
         allowSendingWithoutReply: Boolean? = null,
     ): Message

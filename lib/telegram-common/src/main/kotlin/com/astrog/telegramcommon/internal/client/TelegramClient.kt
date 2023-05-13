@@ -69,10 +69,12 @@ class TelegramClient(
     override suspend fun downloadFile(fileId: String): ByteArray {
         val file = getFile(fileId)
 
-        val responseBody = telegramFileApiService.downloadFile(
+        val response = telegramFileApiService.downloadFile(
             filePath = file.filePath ?: error("filepath is null: $file")
-        )
+        ).let { response ->
+            response.body ?: throw TelegramHttpException(response.code, "Can`t read bytes from response: <$response>")
+        }
 
-        return responseBody.bytes()
+        return response.bytes()
     }
 }
