@@ -2,6 +2,7 @@ package com.astrog.telegramcommon.internal.client
 
 import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.domain.model.File
+import com.astrog.telegramcommon.domain.model.MessageParseMode
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.configuration.TelegramApiService
@@ -21,9 +22,23 @@ class TelegramClient(
         .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
         .result
 
-    override suspend fun sendMessage(chatId: Long, text: String, replyToMessageId: Long?): Message =
+    override suspend fun sendMessage(
+        chatId: Long,
+        text: String,
+        replyToMessageId: Long?,
+        parseMode: MessageParseMode?,
+        disableNotification: Boolean?,
+        allowSendingWithoutReply: Boolean?
+    ): Message =
         telegramApiService
-            .sendMessage(chatId = chatId, text = text, replyToMessageId = replyToMessageId)
+            .sendMessage(
+                chatId = chatId,
+                text = text,
+                replyToMessageId = replyToMessageId,
+                parseMode = parseMode,
+                disableNotification = disableNotification,
+                allowSendingWithoutReply = allowSendingWithoutReply,
+            )
             .result
 
     override suspend fun sendImage(chatId: Long, url: String): Message = telegramApiService

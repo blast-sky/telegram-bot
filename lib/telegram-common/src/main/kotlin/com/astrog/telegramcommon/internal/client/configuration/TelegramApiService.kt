@@ -1,6 +1,7 @@
 package com.astrog.telegramcommon.internal.client.configuration
 
 import com.astrog.telegramcommon.domain.model.File
+import com.astrog.telegramcommon.domain.model.MessageParseMode
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.TelegramResponse
@@ -30,6 +31,9 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("text") text: String,
         @Field("reply_to_message_id") replyToMessageId: Long?,
+        @Field("parse_mode") parseMode: MessageParseMode?,
+        @Field("disable_notification") disableNotification: Boolean?,
+        @Field("allow_sending_without_reply") allowSendingWithoutReply: Boolean?
     ): TelegramResponse<Message>
 
     @POST("sendPhoto")
