@@ -1,5 +1,6 @@
 package com.astrog.telegramcommon.internal.client.configuration
 
+import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.File
 import com.astrog.telegramcommon.domain.model.MessageParseMode
 import com.astrog.telegramcommon.domain.model.update.Message
@@ -36,6 +37,13 @@ interface TelegramApiService {
         @Field("disable_notification") disableNotification: Boolean?,
         @Field("allow_sending_without_reply") allowSendingWithoutReply: Boolean?
     ): Response<TelegramResponse<Message>>
+
+    @POST("sendChatAction")
+    @FormUrlEncoded
+    suspend fun sendChatAction(
+        @Field("chat_id") chatId: Long,
+        @Field("action") action: ChatAction,
+    ): Response<TelegramResponse<Boolean>>
 
     @POST("sendPhoto")
     @FormUrlEncoded

@@ -1,19 +1,35 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
     kotlin("jvm") version "1.8.0"
-    kotlin("plugin.spring") version "1.8.0"
     kotlin("plugin.jpa") version "1.8.0"
-    id("org.springframework.boot") version "3.0.2"
+    kotlin("plugin.spring") version "1.8.0"
+    id("org.springframework.boot") version "3.0.6"
     id("io.spring.dependency-management") version "1.1.0"
+}
+
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+
+    apply(plugin = "io.spring.dependency-management")
+}
+
+subprojects {
+    tasks.withType<BootRun>{
+        enabled = false
+    }
+
+    tasks.withType<BootJar>{
+        enabled = false
+    }
 }
 
 group = "com.astrog.telegrambot"
 version = "0.2"
-
-repositories {
-    mavenCentral()
-}
 
 dependencies {
 

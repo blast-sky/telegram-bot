@@ -1,5 +1,6 @@
 package com.astrog.telegramcommon.api
 
+import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.MessageParseMode
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
@@ -20,4 +21,6 @@ interface TelegramService {
     suspend fun sendImage(chatId: Long, url: String): Message
 
     suspend fun downloadFile(fileId: String): ByteArray
+
+    suspend fun sendChatAction(chatId: Long, action: ChatAction): Boolean
 }
