@@ -8,7 +8,7 @@ data class CommandFilter(
 ) : MessageFilter {
 
     override fun isSatisfy(message: Message): Boolean {
-        return message.text != null &&
-            extractCommand(message.text).command == handledCommand
+        return ContainsCommandFilter.isSatisfy(message) &&
+            extractCommand(message.text!!).command == handledCommand
     }
 }

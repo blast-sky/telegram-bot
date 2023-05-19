@@ -1,23 +1,20 @@
-package com.astrog.telegrambot.api
+package com.astrog.telegrambot.api.openai
 
 import com.astrog.telegrambot.domain.CompletingService
 import com.astrog.telegrambot.domain.ImageGenerationService
 import com.astrog.telegrambot.domain.TelegramAnnouncer
 import com.astrog.telegrambot.domain.TranscriptionService
 import com.astrog.telegrambot.domain.openai.OpenAiMessageStore
-import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.api.annotation.TelegramController
 import com.astrog.telegramcommon.api.annotation.TelegramMapping
 import com.astrog.telegramcommon.api.dsl.command.telegramCommandOf
 import com.astrog.telegramcommon.api.dsl.handler.telegramMessageHandlerOf
-import com.astrog.telegramcommon.domain.filter.message.AnyMessageFilter
-import com.astrog.telegramcommon.domain.model.update.MessageType
-import mu.KotlinLogging
-
-private val logger = KotlinLogging.logger { }
+import com.astrog.telegramcommon.domain.filter.message.ContainsCommandFilter
+import com.astrog.telegramcommon.domain.filter.message.TextFilter
+import com.astrog.telegramcommon.domain.filter.message.VoiceFilter
 
 @TelegramController
-class OpenAiController(
+class CommonOpenAiController(
     private val messageStore: OpenAiMessageStore,
     private val completingService: CompletingService,
     private val imageGenerationService: ImageGenerationService,
@@ -42,20 +39,6 @@ class OpenAiController(
         }
         messageStore.clearMessages(message.chat.id)
         announcer.printMessageAreCleared(message.chat.id)
-    }
-
-    @TelegramMapping
-    fun chatMessage() = telegramMessageHandlerOf { message ->
-        message.text?.let { text ->
-            completingService.process(message.chat.id, text)
-        }
-    }
-
-    @TelegramMapping
-    fun transcription() = telegramMessageHandlerOf { message ->
-        message.voice?.let { voice ->
-            transcriptionService.process(message.chat.id, voice.fileId)
-        }
     }
 
     @TelegramMapping

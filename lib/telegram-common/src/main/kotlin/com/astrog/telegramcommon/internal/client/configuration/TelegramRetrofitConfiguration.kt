@@ -3,6 +3,7 @@ package com.astrog.telegramcommon.internal.client.configuration
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import retrofit2.Retrofit
@@ -15,6 +16,9 @@ class TelegramRetrofitConfiguration(
 ) {
 
     private val client = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
         .connectTimeout(telegramBotProperty.longPollingTimeout + 5L, TimeUnit.SECONDS)
         .writeTimeout(telegramBotProperty.longPollingTimeout + 5L, TimeUnit.SECONDS)
         .readTimeout(telegramBotProperty.longPollingTimeout + 5L, TimeUnit.SECONDS)

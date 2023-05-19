@@ -2,6 +2,7 @@ package com.astrog.telegramcommon.internal.client
 
 import com.astrog.telegramcommon.api.TelegramService
 import com.astrog.telegramcommon.api.exception.TelegramHttpException
+import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.File
 import com.astrog.telegramcommon.domain.model.MessageParseMode
 import com.astrog.telegramcommon.domain.model.update.Message
@@ -34,6 +35,10 @@ class TelegramClient(
             throw TelegramHttpException(code())
         }
     }
+
+    override suspend fun sendChatAction(chatId: Long, action: ChatAction): Boolean = telegramApiService
+        .sendChatAction(chatId = chatId, action = action)
+        .getResultOrThrow()
 
     override suspend fun getUpdates(offset: Long): List<RawUpdate> = telegramApiService
         .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
@@ -69,12 +74,10 @@ class TelegramClient(
     override suspend fun downloadFile(fileId: String): ByteArray {
         val file = getFile(fileId)
 
-        val response = telegramFileApiService.downloadFile(
+        val responseBody = telegramFileApiService.downloadFile(
             filePath = file.filePath ?: error("filepath is null: $file")
-        ).let { response ->
-            response.body ?: throw TelegramHttpException(response.code, "Can`t read bytes from response: <$response>")
-        }
+        )
 
-        return response.bytes()
+        return responseBody.bytes()
     }
 }

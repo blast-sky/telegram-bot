@@ -5,6 +5,7 @@ import com.astrog.openaiapi.internal.dto.chatcompletion.ChatMessage
 import com.astrog.openaiapi.internal.dto.chatcompletion.ChatRole
 import com.astrog.telegrambot.domain.openai.OpenAiMessageStore
 import com.astrog.telegramcommon.api.TelegramService
+import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.MessageParseMode
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
@@ -23,8 +24,9 @@ class CompletingService(
             telegramService.sendMessage(chatId, "Try later...")
         },
         block = {
+            telegramService.sendChatAction(chatId, ChatAction.TYPING)
             val completion = getChatCompletionAndStoreMessages(chatId, args)
-            telegramService.sendMessage(chatId, completion, parseMode = MessageParseMode.Markdown)
+            telegramService.sendMessage(chatId, completion, parseMode = MessageParseMode.MARKDOWN)
         },
     )
 

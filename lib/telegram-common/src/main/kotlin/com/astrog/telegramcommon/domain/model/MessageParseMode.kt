@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 enum class MessageParseMode {
     @JsonProperty("MarkdownV2")
-    MarkdownV2,
+    MARKDOWNV2,
+
     @JsonProperty("Markdown")
-    Markdown,
+    MARKDOWN,
+
     @JsonProperty("HTML")
     HTML,
 }
