@@ -1,63 +1,83 @@
 package com.astrog.telegramcommon.internal.client
 
 import com.astrog.telegramcommon.api.TelegramService
-import com.astrog.telegramcommon.domain.model.Update
-import com.astrog.telegramcommon.domain.model.UpdateContent.Message
-import com.astrog.telegramcommon.internal.client.dto.GetUpdatesRequest
-import com.astrog.telegramcommon.internal.client.dto.GetUpdatesResponse
-import com.astrog.telegramcommon.internal.client.dto.ResponseDto
-import com.astrog.telegramcommon.internal.client.dto.SendMessageRequest
-import com.astrog.telegramcommon.internal.client.dto.SendMessageResponse
-import com.astrog.telegramcommon.internal.client.dto.SendPhotoRequest
+import com.astrog.telegramcommon.api.exception.TelegramHttpException
+import com.astrog.telegramcommon.domain.model.ChatAction
+import com.astrog.telegramcommon.domain.model.File
+import com.astrog.telegramcommon.domain.model.MessageParseMode
+import com.astrog.telegramcommon.domain.model.update.Message
+import com.astrog.telegramcommon.domain.model.update.RawUpdate
+import com.astrog.telegramcommon.internal.client.configuration.TelegramApiService
+import com.astrog.telegramcommon.internal.client.configuration.TelegramFileApiService
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
+import retrofit2.Response
 
 
 @Service
 class TelegramClient(
-    private val telegramRestTemplate: RestTemplate,
+    private val telegramApiService: TelegramApiService,
+    private val telegramFileApiService: TelegramFileApiService,
     private val telegramBotProperty: TelegramBotProperty,
 ) : TelegramService {
 
-    override fun getUpdates(offset: Long): List<Update> = postMethod(
-        method = "getUpdates",
-        requestDto = GetUpdatesRequest(
-            offset = offset,
-            timeout = telegramBotProperty.longPollingTimeout,
-        ),
-        responseDtoClass = GetUpdatesResponse::class.java,
-    )
-
-    override fun sendMessage(chatId: Long, text: String): Message = postMethod(
-        method = "sendMessage",
-        requestDto = SendMessageRequest(
-            chatId = chatId,
-            text = text,
-        ),
-        responseDtoClass = SendMessageResponse::class.java,
-    )
-
-    override fun sendImage(chatId: Long, url: String) = postMethod(
-        method = "sendPhoto",
-        requestDto = SendPhotoRequest(
-            chaId = chatId,
-            photo = url,
-        ),
-        responseDtoClass = SendMessageResponse::class.java,
-    )
-
-    private inline fun <O, reified D : ResponseDto<O>> postMethod(
-        method: String,
-        requestDto: Any,
-        responseDtoClass: Class<D>,
-    ): O {
-        val response = telegramRestTemplate.postForObject(
-            method,
-            requestDto,
-            responseDtoClass,
-        )
-        return response?.result ?: throw RuntimeException("Unavailable results for <$method>.")
+    private inline fun <reified T> Response<TelegramResponse<T>>.getResultOrThrow(): T {
+        if (isSuccessful) {
+            val responseDto = body() ?: throw IllegalStateException()
+            return responseDto.result
+        } else {
+            val jacksonSerializer = jacksonObjectMapper()
+            errorBody()?.string()?.let { error ->
+                val errorResponseDto = jacksonSerializer.readValue(error, ResponseErrorDto::class.java)
+                throw TelegramHttpException(errorResponseDto.errorCode, errorResponseDto.description)
+            }
+            throw TelegramHttpException(code())
+        }
     }
 
+    override suspend fun sendChatAction(chatId: Long, action: ChatAction): Boolean = telegramApiService
+        .sendChatAction(chatId = chatId, action = action)
+        .getResultOrThrow()
+
+    override suspend fun getUpdates(offset: Long): List<RawUpdate> = telegramApiService
+        .getUpdates(offset = offset, timeout = telegramBotProperty.longPollingTimeout)
+        .getResultOrThrow()
+
+    override suspend fun sendMessage(
+        chatId: Long,
+        text: String,
+        replyToMessageId: Long?,
+        parseMode: MessageParseMode?,
+        disableNotification: Boolean?,
+        allowSendingWithoutReply: Boolean?
+    ): Message =
+        telegramApiService
+            .sendMessage(
+                chatId = chatId,
+                text = text,
+                replyToMessageId = replyToMessageId,
+                parseMode = parseMode,
+                disableNotification = disableNotification,
+                allowSendingWithoutReply = allowSendingWithoutReply,
+            )
+            .getResultOrThrow()
+
+    override suspend fun sendImage(chatId: Long, url: String): Message = telegramApiService
+        .sendPhoto(chatId = chatId, url = url)
+        .getResultOrThrow()
+
+    private suspend fun getFile(fileId: String): File = telegramApiService
+        .getFile(fileId = fileId)
+        .getResultOrThrow()
+
+    override suspend fun downloadFile(fileId: String): ByteArray {
+        val file = getFile(fileId)
+
+        val responseBody = telegramFileApiService.downloadFile(
+            filePath = file.filePath ?: error("filepath is null: $file")
+        )
+
+        return responseBody.bytes()
+    }
 }

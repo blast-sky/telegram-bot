@@ -1,6 +1,12 @@
 spring:
   profiles:
-    active: default
+    active: mem
+  datasource:
+    username: ${BD_USERNAME}
+    password: ${BD_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
 
 logging:
   level:
@@ -14,6 +20,8 @@ telegram:
 open-ai:
   token: ${OPENAI_TOKEN}
   base-url: https://api.openai.com
+  completion-model: gpt-3.5-turbo
+  chat-completion-model: gpt-3.5-turbo
 
 game:
   game-question-cont: 3

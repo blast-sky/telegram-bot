@@ -6,4 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 data class OpenAiProperty(
     val token: String,
     val baseUrl: String,
+    val completionModel: String,
+    val chatCompletionModel: String,
 )

@@ -1,0 +1,3 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:~/data/message_db

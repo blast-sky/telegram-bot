@@ -1,26 +1,32 @@
 package com.astrog.telegramcommon.internal.runner
 
-import com.astrog.telegramcommon.domain.model.Update
+import com.astrog.telegramcommon.domain.model.update.Update
+import com.astrog.telegramcommon.internal.handler.TelegramUpdateHandler
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
-import java.util.concurrent.Executors
 
 private val logger = KotlinLogging.logger { }
 
 @Service
 class UpdateDispatcher(
-    private val updateProcessor: UpdateProcessor,
+    private val updateHandlers: List<TelegramUpdateHandler>,
 ) {
 
-    private val executor = Executors.newFixedThreadPool(16) // TODO move to configuration
+    private val dispatcherScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
-    fun dispatch(update: Update) {
-        executor.submit {
-            try {
-                updateProcessor.process(update)
-            } catch (ex: Exception) {
-                logger.error(ex.stackTraceToString())
-            }
+    suspend fun dispatch(updates: List<Update>) = updates.forEach { update ->
+        logger.info { "Process update: $update." }
+
+        dispatcherScope.launch {
+            updateHandlers
+                .filter { handler -> handler.isSatisfy(update) }
+                // TODO add unsupported command support
+                .apply { }
+                .forEach { handler -> handler.dispatch(update) }
         }
     }
 }

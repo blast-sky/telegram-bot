@@ -1,18 +1,7 @@
 plugins {
     kotlin("jvm") version "1.8.0"
-    kotlin("plugin.spring") version "1.8.0"
-    id("org.springframework.boot") version "3.0.2" apply false
-    id("io.spring.dependency-management") version "1.1.0"
-}
-
-repositories {
-    mavenCentral()
-}
-
-dependencyManagement {
-    imports {
-        mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
-    }
+    kotlin("plugin.spring")
+    id("org.springframework.boot")
 }
 
 dependencies {

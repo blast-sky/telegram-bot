@@ -11,4 +11,7 @@ data class TelegramBotProperty constructor(
 
     val baseUrlWithToken: String
         get() = "$baseUrl/bot$botToken"
+
+    val fileBaseUrlWithToken: String
+        get() = "$baseUrl/file/bot$botToken"
 }
