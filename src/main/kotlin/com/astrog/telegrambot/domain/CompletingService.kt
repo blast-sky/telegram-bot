@@ -31,10 +31,19 @@ class CompletingService(
     )
 
     suspend fun getChatCompletionAndStoreMessages(chatId: Long, request: String): String {
-        openAiMessageStore.addMessage(chatId, ChatMessage(ChatRole.User, request))
+        val currentMessage = ChatMessage(ChatRole.User, request)
+
+        var totalMessageLength = 0
         val cashedMessages = openAiMessageStore.getMessages(chatId)
-        val message = openAiClient.getChatCompletion(cashedMessages)
-        openAiMessageStore.addMessage(chatId, message)
-        return message.content
+            .takeLastWhile {
+                totalMessageLength += it.content.length
+                totalMessageLength < OpenAiClient.maxTokenCount
+            }
+
+        val modelResponse = openAiClient.getChatCompletion(cashedMessages + currentMessage)
+
+        openAiMessageStore.addMessage(chatId, currentMessage)
+        openAiMessageStore.addMessage(chatId, modelResponse)
+        return modelResponse.content
     }
 }

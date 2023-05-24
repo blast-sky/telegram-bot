@@ -79,4 +79,8 @@ class OpenAiClient(
             )
             .text ?: ""
     }
+
+    companion object {
+        const val maxTokenCount = 4000
+    }
 }
