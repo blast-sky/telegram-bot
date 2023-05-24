@@ -3,9 +3,9 @@ FROM openjdk:17-alpine
 WORKDIR /app
 
 RUN [
-  "sudo", "apt", "update", "&&",
-  "sudo", "apt", "upgrade", "&&",
-  "sudo", "apt", "install", "ffmpeg"
+  "apt", "update", "&&",
+  "apt", "upgrade", "&&",
+  "apt", "install", "ffmpeg"
 ]
 
 ARG JAR_FILE=app.jar
