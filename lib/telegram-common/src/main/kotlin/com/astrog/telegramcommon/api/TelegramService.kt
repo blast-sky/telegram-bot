@@ -2,6 +2,7 @@ package com.astrog.telegramcommon.api
 
 import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.MessageParseMode
+import com.astrog.telegramcommon.domain.model.markup.InlineKeyboardMarkup
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
 
@@ -16,6 +17,7 @@ interface TelegramService {
         parseMode: MessageParseMode? = null,
         disableNotification: Boolean? = null,
         allowSendingWithoutReply: Boolean? = null,
+        replyMarkup: InlineKeyboardMarkup? = null,
     ): Message
 
     suspend fun sendImage(chatId: Long, url: String): Message

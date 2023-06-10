@@ -8,6 +8,12 @@ import org.springframework.stereotype.Service
 class UpdateMapper {
 
     fun mapRawUpdates(rawUpdates: List<RawUpdate>): List<Update> {
-        return rawUpdates.mapNotNull(RawUpdate::messageWithType)
+        return rawUpdates.mapNotNull(::mapRawUpdate)
+    }
+
+    private fun mapRawUpdate(rawUpdate: RawUpdate): Update? {
+        rawUpdate.messageWithType?.let { return it }
+        rawUpdate.callbackQuery?.let { return it }
+        return null
     }
 }

@@ -1,32 +1,28 @@
 package com.astrog.telegrambot.domain
 
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.async
+import kotlinx.coroutines.NonCancellable
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import mu.KotlinLogging
 
 private val logger = KotlinLogging.logger { }
 
 abstract class BaseCatchingService {
 
-    private val exceptionLogger = CoroutineExceptionHandler { _, throwable ->
-        logger.error(throwable.stackTraceToString())
-    }
-
-    private val scope = CoroutineScope(SupervisorJob() + exceptionLogger)
-
     protected suspend fun catching(
-        onException: suspend (exception: RuntimeException) -> Unit,
+        onException: suspend (exception: Exception) -> Unit,
         block: suspend () -> Unit,
     ) {
-        with(scope) {
-            val mainJob = async { block.invoke() }
-            try {
-                mainJob.await()
-            } catch (ex: RuntimeException) {
-                logger.error(ex.stackTraceToString())
-                onException.invoke(ex)
+        try {
+            coroutineScope { block.invoke() }
+        } catch (exceptionInBlock: Exception) {
+            withContext(NonCancellable) {
+                logger.error(exceptionInBlock.stackTraceToString())
+                try {
+                    coroutineScope { onException.invoke(exceptionInBlock) }
+                } catch (exceptionInOnException: Exception) {
+                    logger.error(exceptionInOnException.stackTraceToString())
+                }
             }
         }
     }

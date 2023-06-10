@@ -15,6 +15,8 @@ data class RawUpdate(
     private val channelPost: Message?,
     @JsonProperty("edited_channel_post")
     private val editedChannelPost: Message?,
+    @JsonProperty("callback_query")
+    val callbackQuery: CallbackQuery?,
 ) {
 
     // Take first not null message from update and set message type

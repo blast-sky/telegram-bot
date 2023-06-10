@@ -10,8 +10,6 @@ import com.astrog.telegramcommon.domain.model.MessageParseMode
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 
-private val logger = KotlinLogging.logger { }
-
 @Service
 class CompletingService(
     private val openAiClient: OpenAiClient,

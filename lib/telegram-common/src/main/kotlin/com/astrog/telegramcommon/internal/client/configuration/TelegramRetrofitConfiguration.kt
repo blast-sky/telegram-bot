@@ -1,6 +1,7 @@
 package com.astrog.telegramcommon.internal.client.configuration
 
 import com.astrog.telegramcommon.internal.property.TelegramBotProperty
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import mu.KotlinLogging
 import okhttp3.OkHttpClient
@@ -19,8 +20,8 @@ class TelegramRetrofitConfiguration(
 ) {
 
     private val client = OkHttpClient.Builder()
-        .addInterceptor(HttpLoggingInterceptor { logger.debug(it) }.apply {
-            level = HttpLoggingInterceptor.Level.BASIC
+        .addInterceptor(HttpLoggingInterceptor { logger.debug { it } }.apply {
+            level = HttpLoggingInterceptor.Level.BODY
         })
         .connectTimeout(telegramBotProperty.longPollingTimeout + 5L, TimeUnit.SECONDS)
         .writeTimeout(telegramBotProperty.longPollingTimeout + 5L, TimeUnit.SECONDS)
@@ -28,22 +29,26 @@ class TelegramRetrofitConfiguration(
         .retryOnConnectionFailure(true)
         .build()
 
-    private val retrofitBuilder = Retrofit.Builder()
-        .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper()))
-        .client(client)
 
     @Bean
-    fun telegramApiService(): TelegramApiService {
+    fun retrofitBuilder(mapper: ObjectMapper): Retrofit.Builder {
+        return Retrofit.Builder()
+            .addConverterFactory(JacksonConverterFactory.create(jacksonObjectMapper()))
+            .client(client)
+    }
+
+    @Bean
+    fun telegramApiService(retrofitBuilder: Retrofit.Builder): TelegramApiService {
         return retrofitBuilder
-            .baseUrl("${telegramBotProperty.baseUrlWithToken}/")
+            .baseUrl(telegramBotProperty.baseUrlWithToken + '/')
             .build()
             .create(TelegramApiService::class.java)
     }
 
     @Bean
-    fun telegramFileApiService(): TelegramFileApiService {
+    fun telegramFileApiService(retrofitBuilder: Retrofit.Builder): TelegramFileApiService {
         return retrofitBuilder
-            .baseUrl("${telegramBotProperty.fileBaseUrlWithToken}/")
+            .baseUrl(telegramBotProperty.fileBaseUrlWithToken + '/')
             .build()
             .create(TelegramFileApiService::class.java)
     }
