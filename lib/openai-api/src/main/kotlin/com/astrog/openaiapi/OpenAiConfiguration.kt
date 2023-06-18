@@ -1,6 +1,8 @@
 package com.astrog.openaiapi
 
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.context.annotation.ComponentScan
 
 @ComponentScan
+@ConfigurationPropertiesScan
 class OpenAiConfiguration
