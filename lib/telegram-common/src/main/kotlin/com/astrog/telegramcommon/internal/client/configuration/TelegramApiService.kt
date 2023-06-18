@@ -35,7 +35,8 @@ interface TelegramApiService {
         @Field("reply_to_message_id") replyToMessageId: Long?,
         @Field("parse_mode") parseMode: MessageParseMode?,
         @Field("disable_notification") disableNotification: Boolean?,
-        @Field("allow_sending_without_reply") allowSendingWithoutReply: Boolean?
+        @Field("allow_sending_without_reply") allowSendingWithoutReply: Boolean?,
+        @Field("reply_markup") replyMarkup: String?, // not specified type because jackson have not string converter by default
     ): Response<TelegramResponse<Message>>
 
     @POST("sendChatAction")
@@ -51,4 +52,10 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("photo") url: String,
     ): Response<TelegramResponse<Message>>
+
+    @POST("answerCallbackQuery")
+    @FormUrlEncoded
+    suspend fun answerCallbackQuery(
+        @Field("callback_query_id") callbackQueryId: String,
+    ): Response<TelegramResponse<Boolean>>
 }

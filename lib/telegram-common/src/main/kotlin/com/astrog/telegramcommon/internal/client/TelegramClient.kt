@@ -5,6 +5,7 @@ import com.astrog.telegramcommon.api.exception.TelegramHttpException
 import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.File
 import com.astrog.telegramcommon.domain.model.MessageParseMode
+import com.astrog.telegramcommon.domain.model.markup.InlineKeyboardMarkup
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.configuration.TelegramApiService
@@ -50,7 +51,8 @@ class TelegramClient(
         replyToMessageId: Long?,
         parseMode: MessageParseMode?,
         disableNotification: Boolean?,
-        allowSendingWithoutReply: Boolean?
+        allowSendingWithoutReply: Boolean?,
+        replyMarkup: InlineKeyboardMarkup?,
     ): Message =
         telegramApiService
             .sendMessage(
@@ -60,6 +62,7 @@ class TelegramClient(
                 parseMode = parseMode,
                 disableNotification = disableNotification,
                 allowSendingWithoutReply = allowSendingWithoutReply,
+                replyMarkup = replyMarkup?.let { jacksonObjectMapper().writeValueAsString(it) },
             )
             .getResultOrThrow()
 
@@ -80,4 +83,8 @@ class TelegramClient(
 
         return responseBody.bytes()
     }
+
+    override suspend fun answerCallbackQuery(callbackQueryId: String): Boolean = telegramApiService
+        .answerCallbackQuery(callbackQueryId)
+        .getResultOrThrow()
 }

@@ -5,7 +5,6 @@ import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.Update
 
 typealias UpdateHandlerCallback = suspend (Update) -> Unit
-typealias MessageHandlerCallback = suspend (message: Message) -> Unit
 typealias CommandHandlerCallback = suspend (message: Message, args: String) -> Unit
 
 data class TelegramUpdateHandler(

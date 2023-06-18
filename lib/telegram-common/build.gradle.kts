@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
+    kotlin("kapt")
     kotlin("jvm")
     kotlin("plugin.spring")
     id("org.springframework.boot")
@@ -10,6 +11,8 @@ group = "com.astrog.telegramcommon"
 version = "0.1"
 
 dependencies {
+
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
