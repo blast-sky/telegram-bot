@@ -108,6 +108,7 @@ class TranscriptionService(
     }
 
     suspend fun choiceMode(callbackQuery: CallbackQuery) {
+        telegramService.answerCallbackQuery(callbackQuery.id)
         callbackQuery.message?.let { message ->
             message.replyToMessage?.voice?.fileId?.let { voiceFileId ->
                 when (callbackQuery.data) {

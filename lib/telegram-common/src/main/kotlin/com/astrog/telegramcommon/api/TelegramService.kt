@@ -25,4 +25,6 @@ interface TelegramService {
     suspend fun downloadFile(fileId: String): ByteArray
 
     suspend fun sendChatAction(chatId: Long, action: ChatAction): Boolean
+
+    suspend fun answerCallbackQuery(callbackQueryId: String): Boolean
 }

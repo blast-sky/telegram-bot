@@ -3,6 +3,7 @@ import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
 
 plugins {
+    kotlin("kapt") version "1.8.0"
     kotlin("jvm") version "1.8.0"
     kotlin("plugin.jpa") version "1.8.0"
     kotlin("plugin.spring") version "1.8.0"
@@ -32,6 +33,8 @@ group = "com.astrog.telegrambot"
 version = "0.2"
 
 dependencies {
+
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 
     implementation(project(":lib:telegram-common"))
     implementation(project(":lib:openai-api"))

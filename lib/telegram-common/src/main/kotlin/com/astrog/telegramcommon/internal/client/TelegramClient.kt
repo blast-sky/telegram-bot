@@ -83,4 +83,8 @@ class TelegramClient(
 
         return responseBody.bytes()
     }
+
+    override suspend fun answerCallbackQuery(callbackQueryId: String): Boolean = telegramApiService
+        .answerCallbackQuery(callbackQueryId)
+        .getResultOrThrow()
 }

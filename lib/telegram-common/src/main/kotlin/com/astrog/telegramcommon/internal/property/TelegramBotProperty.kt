@@ -3,7 +3,7 @@ package com.astrog.telegramcommon.internal.property
 import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "telegram")
-data class TelegramBotProperty constructor(
+data class TelegramBotProperty(
     private val botToken: String,
     private val baseUrl: String,
     val longPollingTimeout: Int,

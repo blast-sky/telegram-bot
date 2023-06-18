@@ -3,7 +3,6 @@ package com.astrog.telegramcommon.internal.client.configuration
 import com.astrog.telegramcommon.domain.model.ChatAction
 import com.astrog.telegramcommon.domain.model.File
 import com.astrog.telegramcommon.domain.model.MessageParseMode
-import com.astrog.telegramcommon.domain.model.markup.InlineKeyboardMarkup
 import com.astrog.telegramcommon.domain.model.update.Message
 import com.astrog.telegramcommon.domain.model.update.RawUpdate
 import com.astrog.telegramcommon.internal.client.TelegramResponse
@@ -53,4 +52,10 @@ interface TelegramApiService {
         @Field("chat_id") chatId: Long,
         @Field("photo") url: String,
     ): Response<TelegramResponse<Message>>
+
+    @POST("answerCallbackQuery")
+    @FormUrlEncoded
+    suspend fun answerCallbackQuery(
+        @Field("callback_query_id") callbackQueryId: String,
+    ): Response<TelegramResponse<Boolean>>
 }
