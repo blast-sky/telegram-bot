@@ -1,19 +1,10 @@
 package com.astrog.telegrambot
 
-import com.astrog.openaiapi.internal.OpenAiProperty
-import com.astrog.telegrambot.internal.GameProperty
-import com.astrog.telegramcommon.api.annotation.EnableTelegramBotPolling
-import com.astrog.telegramcommon.internal.property.TelegramBotProperty
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.context.properties.EnableConfigurationProperties
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan
 import org.springframework.boot.runApplication
 
-@EnableTelegramBotPolling
-@EnableConfigurationProperties(
-    TelegramBotProperty::class,
-    OpenAiProperty::class,
-    GameProperty::class
-)
+@ConfigurationPropertiesScan
 @SpringBootApplication
 class TelegramBotApplication
 
