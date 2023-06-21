@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 import org.springframework.boot.gradle.tasks.run.BootRun
+import java.net.URI
 
 plugins {
     kotlin("kapt") version "1.8.0"
@@ -14,17 +15,18 @@ plugins {
 allprojects {
     repositories {
         mavenCentral()
+        maven { url = URI.create("https://jitpack.io") }
     }
 
     apply(plugin = "io.spring.dependency-management")
 }
 
 subprojects {
-    tasks.withType<BootRun>{
+    tasks.withType<BootRun> {
         enabled = false
     }
 
-    tasks.withType<BootJar>{
+    tasks.withType<BootJar> {
         enabled = false
     }
 }
@@ -36,7 +38,12 @@ dependencies {
 
     kapt("org.springframework.boot:spring-boot-configuration-processor")
 
-    implementation(project(":lib:telegram-common"))
+    val telegramVersion = "6.1.0"
+    implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:$telegramVersion")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
+
     implementation(project(":lib:openai-api"))
     implementation(project(":lib:audioconverter"))
 

@@ -1,28 +1,31 @@
 package com.astrog.telegrambot.api
 
-import com.astrog.telegrambot.domain.TelegramAnnouncer
-import com.astrog.telegramcommon.api.annotation.TelegramController
-import com.astrog.telegramcommon.api.annotation.TelegramMapping
-import com.astrog.telegramcommon.api.dsl.command.telegramCommandOf
-import com.astrog.telegramcommon.api.dsl.command.telegramUnsupportedCommand
+import com.astrog.telegrambot.domain.telegram.TelegramConfiguration
+import com.astrog.telegrambot.domain.telegram.TelegramMapping
+import com.astrog.telegrambot.internal.bot.Dispatcher
+import com.github.kotlintelegrambot.Bot
+import com.github.kotlintelegrambot.dispatcher.command
+import com.github.kotlintelegrambot.entities.ChatId
 
-@TelegramController
-class MainController(
-    private val announcer: TelegramAnnouncer,
-) {
-
-    @TelegramMapping
-    fun helpCommandMapping() = telegramCommandOf(
-        handledCommand = "help",
-    ) { message, _ -> announcer.printHelp(message.chat.id) }
+@TelegramConfiguration
+class MainController{
 
     @TelegramMapping
-    fun startCommandMapping() = telegramCommandOf(
-        handledCommand = "start",
-    ) { message, _ -> announcer.printHelp(message.chat.id) }
+    fun helpMapping(): Dispatcher = {
+        fun Bot.sendHelpToChat(chatId: Long) {
+            sendMessage(ChatId.fromId(chatId), HELP)
+        }
 
-    @TelegramMapping
-    fun unsupportedCommandMapping() = telegramUnsupportedCommand { message, _ ->
-        announcer.printHelp(message.chat.id)
+        command("help") {
+            bot.sendHelpToChat(message.chat.id)
+        }
+
+        command("start") {
+            bot.sendHelpToChat(message.chat.id)
+        }
+    }
+
+    private companion object {
+        const val HELP = "ƒоступные команды дл€ приватного чата: " // TODO
     }
 }
