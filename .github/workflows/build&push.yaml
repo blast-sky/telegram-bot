@@ -41,7 +41,7 @@ jobs:
   extract-commit-sha:
     runs-on: ubuntu-latest
     outputs:
-      commit_sha_short: ${{ steps.cut-sha.outputs.short-sha }}
+      commit-sha-short: ${{ steps.cut-sha.outputs.short-sha }}
     steps:
       # take first 6 symbols from github.sha
       - id: cut-sha
@@ -79,7 +79,7 @@ jobs:
           context: .
           push: true
           #          ${{ github.ref_name }}
-          tags: ${{ env.TAG_WITHOUT_VERSION }}:main-${{ needs.extract-commit-sha.outputs.short-sha }}
+          tags: ${{ env.TAG_WITHOUT_VERSION }}:main-${{ needs.extract-commit-sha.outputs.commit-sha-short }}
 
       - name: Build and push (latest)
         uses: docker/build-push-action@v4
