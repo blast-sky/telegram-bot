@@ -48,6 +48,8 @@ jobs:
           name: app.jar
           path: build/libs
 
+      - uses: actions/checkout@v3
+
       - name: Build image and push to DockerHub
         uses: mr-smithers-excellent/docker-build-push@v4
         with:
