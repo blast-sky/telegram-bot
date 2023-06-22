@@ -41,11 +41,13 @@ jobs:
   extract-commit-sha:
     runs-on: ubuntu-latest
     outputs:
-      commit-sha-short: ${{ steps.cut-sha.outputs.short-sha }}
+      short-sha: ${{ steps.cut-sha.outputs.short-sha }}
     steps:
       # take first 6 symbols from github.sha
       - id: cut-sha
-        run: echo "short-sha=$(echo ${{ github.sha }} | cut -c 1-6)" >> "$GITHUB_OUTPUT"
+        run: | 
+          echo "short-sha=$(echo ${{ github.sha }} | cut -c 1-6)" >> $GITHUB_OUTPUT
+          echo "short-sha=$(echo ${{ github.sha }} | cut -c 1-6)" >> $GITHUB_STEP_SUMMARY
 
 
   push-to-DockerHub:
@@ -79,7 +81,7 @@ jobs:
           context: .
           push: true
           #          ${{ github.ref_name }}
-          tags: ${{ env.TAG_WITHOUT_VERSION }}:main-${{ needs.extract-commit-sha.outputs.commit-sha-short }}
+          tags: ${{ env.TAG_WITHOUT_VERSION }}:main-${{ needs.extract-commit-sha.outputs.short-sha }}
 
       - name: Build and push (latest)
         uses: docker/build-push-action@v4
