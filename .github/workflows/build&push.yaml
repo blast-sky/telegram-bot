@@ -3,8 +3,7 @@ name: Test&Build&Push
 on: push
 
 env:
-  BRANCH_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/telegram-bot:${{ github.ref_name }}-${{ github.sha }}
-  LATEST_TAG: ${{ secrets.DOCKERHUB_USERNAME }}/telegram-bot:latest
+  TAG_WITHOUT_VERSION: ${{ secrets.DOCKERHUB_USERNAME }}/telegram-bot
 
 jobs:
   build:
@@ -38,10 +37,19 @@ jobs:
           name: app.jar
           path: build/libs/app.jar
 
+
+  extract-commit-sha:
+    runs-on: ubuntu-latest
+
+    steps:
+      # take first 4 symbols from github.sha
+      - run: echo "COMMIT_SHA=${{ github.sha }}" | cut -c1-15 >> $GITHUB_ENV
+
+
   push-to-DockerHub:
     needs: build
 
-#    if: ${{ github.ref_name == 'main' }}
+    #    if: ${{ github.ref_name == 'main' }}
 
     runs-on: ubuntu-latest
 
@@ -68,11 +76,11 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.BRANCH_TAG }}
+          tags: ${{ env.TAG_WITHOUT_VERSION }}:${{ github.ref_name##*/ }}-${{ env.COMMIT_SHA }}
 
       - name: Build and push (latest)
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
-          tags: ${{ env.LATEST_TAG }}
+          tags: ${{ env.TAG_WITHOUT_VERSION }}:${{ env.LATEST_TAG }}
