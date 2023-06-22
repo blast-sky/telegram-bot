@@ -76,7 +76,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ env.TAG_WITHOUT_VERSION }}:${{ github.ref_name.replace('/', '-') }}-${{ env.COMMIT_SHA }}
+          #          ${{ github.ref_name }}
+          tags: ${{ env.TAG_WITHOUT_VERSION }}:main-${{ env.COMMIT_SHA }}
 
       - name: Build and push (latest)
         uses: docker/build-push-action@v4
