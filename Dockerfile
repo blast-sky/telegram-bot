@@ -1,8 +1,8 @@
-FROM openjdk:17-jdk-slim-buster
+FROM openjdk:17-alpine
 
 WORKDIR /app
 
-RUN ["sudo", "apt-get", "install", "ffmpeg"]
+RUN apk add --no-cache ffmpeg
 
 ARG JAR_FILE=app.jar
 COPY build/libs/${JAR_FILE} app.jar
