@@ -53,7 +53,7 @@ jobs:
   push-to-DockerHub:
     needs: [build, extract-commit-sha]
 
-    #    if: ${{ github.ref_name == 'main' }}
+    if: ${{ github.ref_name == 'main' }}
 
     runs-on: ubuntu-latest
 
@@ -80,8 +80,7 @@ jobs:
         with:
           context: .
           push: true
-          #          ${{ github.ref_name }}
-          tags: ${{ env.TAG_WITHOUT_VERSION }}:main-${{ needs.extract-commit-sha.outputs.short-sha }}
+          tags: ${{ env.TAG_WITHOUT_VERSION }}:${{ github.ref_name }}-${{ needs.extract-commit-sha.outputs.short-sha }}
 
       - name: Build and push (latest)
         uses: docker/build-push-action@v4
